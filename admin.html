@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>育仁中学2026年会抽奖 - 管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            padding: 30px;
+            color: #333;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none; /* 默认隐藏，验证密码后显示 */
+        }
+
+        /* 密码验证弹窗 */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .password-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .password-title {
+            font-size: 24px;
+            color: #1a2980;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 18px;
+            border: 2px solid #26d0ce;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: #1a2980;
+        }
+
+        .password-btn {
+            padding: 10px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1a2980;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .password-btn:hover {
+            background-color: #152066;
+        }
+
+        .error-tip {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .admin-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1a2980;
+        }
+
+        .admin-title {
+            font-size: 32px;
+            color: #1a2980;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .admin-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* 轮数管理区域 */
+        .round-manager {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .round-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a2980;
+        }
+
+        .round-value {
+            font-size: 24px;
+            color: #e74c3c;
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        .round-input {
+            padding: 8px 15px;
+            font-size: 16px;
+            border: 2px solid #26d0ce;
+            border-radius: 6px;
+            width: 100px;
+            text-align: center;
+            outline: none;
+        }
+
+        .round-input:focus {
+            border-color: #1a2980;
+        }
+
+        /* 功能按钮样式 */
+        .btn {
+            padding: 10px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background-color: #1a2980;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #152066;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219653;
+        }
+
+        .btn-info {
+            background-color: #26d0ce;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #1fb5b2;
+        }
+
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+        /* 功能分区样式 */
+        .function-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #1a2980;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* 筛选区域 */
+        .filter-area {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-input {
+            padding: 8px 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 150px;
+            outline: none;
+        }
+
+        .filter-input:focus {
+            border-color: #26d0ce;
+        }
+
+        /* 中奖名单表格 */
+        .win-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .win-list-table th,
+        .win-list-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .win-list-table th {
+            background-color: #1a2980;
+            color: white;
+            font-weight: 600;
+        }
+
+        .win-list-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .win-list-table tr:hover {
+            background-color: #e8f4f8;
+        }
+
+        .round-cell {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .type-cell {
+            color: #1a2980;
+            font-weight: 600;
+        }
+
+        /* 操作列按钮 */
+        .oper-btn {
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            margin: 2px;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 空数据提示 */
+        .empty-tip {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            font-size: 18px;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background-color: #1a2980;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #152066;
+            transform: scale(1.05);
+        }
+
+        /* 密码管理区域 */
+        .password-manager {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .password-input-box {
+            padding: 8px 15px;
+            font-size: 16px;
+            border: 2px solid #26d0ce;
+            border-radius: 6px;
+            width: 200px;
+            outline: none;
+        }
+
+        /* 文件上传样式 */
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            font-size: 16px;
+            background-color: #26d0ce;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #1fb5b2;
+        }
+
+        #restoreFile {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* 实时状态提示 */
+        .real-time-tip {
+            font-size: 14px;
+            color: #27ae60;
+            margin-left: 10px;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 20px;
+            }
+            .admin-title {
+                font-size: 24px;
+            }
+            .win-list-table th,
+            .win-list-table td {
+                padding: 8px 5px;
+                font-size: 14px;
+            }
+            .btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .password-box {
+                padding: 20px;
+            }
+        }
+    </style>
+    <!-- 引入Excel处理库 -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- 密码验证弹窗 -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-box">
+            <h2 class="password-title">管理后台验证</h2>
+            <input type="password" class="password-input" id="adminPasswordInput" placeholder="请输入管理密码">
+            <button class="password-btn" id="verifyPasswordBtn">验证</button>
+            <p class="error-tip" id="passwordErrorTip">密码错误，请重新输入！</p>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h1 class="admin-title">育仁中学2026年会抽奖系统 - 管理后台</h1>
+            <p class="admin-subtitle">可管理中奖名单、重置抽奖数据、修改抽奖轮数等操作 <span class="real-time-tip">（数据实时更新中）</span></p>
+        </div>
+
+        <!-- 轮数管理区域 -->
+        <div class="function-section">
+            <h3 class="section-title">抽奖轮数管理</h3>
+            <div class="round-manager">
+                <span class="round-label">当前抽奖轮数：</span>
+                <span class="round-value" id="currentRoundValue">1</span>
+                <span class="round-label">修改为：</span>
+                <input type="number" class="round-input" id="newRoundInput" min="1" value="1">
+                <button class="btn btn-primary" id="updateRoundBtn">更新轮数</button>
+                <button class="btn btn-danger" id="resetRoundBtn">重置轮数为1</button>
+            </div>
+        </div>
+
+        <!-- 密码管理区域 -->
+        <div class="function-section">
+            <h3 class="section-title">密码管理</h3>
+            <div class="password-manager">
+                <span class="round-label">当前密码：</span>
+                <span class="round-value" id="currentPasswordValue">默认密码(123456)</span>
+                <span class="round-label">新密码：</span>
+                <input type="password" class="password-input-box" id="newPasswordInput" placeholder="输入新密码">
+                <button class="btn btn-warning" id="changePasswordBtn">修改密码</button>
+                <button class="btn btn-danger" id="resetPasswordBtn">重置为默认密码</button>
+            </div>
+        </div>
+
+        <!-- 系统管理区域 -->
+        <div class="function-section">
+            <h3 class="section-title">系统数据管理</h3>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <button class="btn btn-danger" id="clearAllDataBtn">清空所有系统数据</button>
+                <button class="btn btn-success" id="exportDataBtn">导出系统数据备份</button>
+                <div class="file-upload">
+                    <span class="upload-btn">导入数据备份</span>
+                    <input type="file" id="restoreFile" accept=".json">
+                </div>
+                <button class="btn btn-info" id="refreshSystemBtn">刷新系统数据</button>
+            </div>
+        </div>
+
+        <!-- 中奖名单管理 -->
+        <div class="function-section">
+            <h3 class="section-title">中奖名单管理</h3>
+            <!-- 功能按钮区域 -->
+            <div class="btn-group" style="margin-bottom: 20px;">
+                <button class="btn btn-danger" id="clearAllBtn">清空所有中奖记录</button>
+                <button class="btn btn-info" id="clearRoundBtn">清空指定轮数记录</button>
+                <button class="btn btn-success" id="downloadAllBtn">下载全部中奖名单</button>
+                <button class="btn btn-primary" id="refreshListBtn">手动刷新名单</button>
+            </div>
+
+            <!-- 筛选区域 -->
+            <div class="filter-area">
+                <span class="filter-label">按轮数筛选：</span>
+                <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
+                <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
+                <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
+            </div>
+
+            <!-- 中奖名单表格 -->
+            <div style="overflow-x: auto;">
+                <table class="win-list-table" id="winListTable">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>抽奖轮数</th>
+                            <th>抽奖类型</th>
+                            <th>中奖内容</th>
+                            <th>中奖时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="winListTbody">
+                        <tr>
+                            <td colspan="6" class="empty-tip">暂无中奖记录</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 返回抽奖页面 -->
+        <a href="./index.html" class="back-btn" id="backToLotteryBtn">返回抽奖页面</a>
+    </div>
+
+    <script>
+        // ====================== 全局变量 ======================
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPasswordInput = document.getElementById('adminPasswordInput');
+        const verifyPasswordBtn = document.getElementById('verifyPasswordBtn');
+        const passwordErrorTip = document.getElementById('passwordErrorTip');
+        const adminContainer = document.getElementById('adminContainer');
+        const backToLotteryBtn = document.getElementById('backToLotteryBtn');
+
+        // 默认密码（首次使用）
+        const DEFAULT_PASSWORD = '123456';
+        // 获取存储的密码（加密存储）
+        let adminPassword = localStorage.getItem('lotteryAdminPassword') || btoa(DEFAULT_PASSWORD);
+        
+        // 轮数管理元素
+        const currentRoundValue = document.getElementById('currentRoundValue');
+        const newRoundInput = document.getElementById('newRoundInput');
+        const updateRoundBtn = document.getElementById('updateRoundBtn');
+        const resetRoundBtn = document.getElementById('resetRoundBtn');
+        
+        // 密码管理元素
+        const currentPasswordValue = document.getElementById('currentPasswordValue');
+        const newPasswordInput = document.getElementById('newPasswordInput');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+        
+        // 系统管理元素
+        const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const restoreFile = document.getElementById('restoreFile');
+        const refreshSystemBtn = document.getElementById('refreshSystemBtn');
+        
+        // 中奖名单管理元素
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const clearRoundBtn = document.getElementById('clearRoundBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const refreshListBtn = document.getElementById('refreshListBtn');
+        const filterRoundInput = document.getElementById('filterRoundInput');
+        const filterRoundBtn = document.getElementById('filterRoundBtn');
+        const clearFilterBtn = document.getElementById('clearFilterBtn');
+        const winListTbody = document.getElementById('winListTbody');
+
+        // 数据存储变量
+        let currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
+        let winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
+        let filteredWinList = [...winList]; // 筛选后的列表
+        
+        // 实时更新定时器
+        let realtimeTimer = null;
+        // 轮询间隔（1秒）
+        const POLLING_INTERVAL = 1000;
+
+        // ====================== 页面初始化 ======================
+        window.addEventListener('load', function() {
+            // 绑定密码验证事件
+            verifyPasswordBtn.addEventListener('click', verifyPassword);
+            adminPasswordInput.addEventListener('keydown', function(e) {
+                if (e.code === 'Enter') verifyPassword();
+            });
+            
+            // 初始化功能按钮事件
+            initFunctionButtons();
+            
+            // 修复返回按钮跳转
+            fixBackButtonLink();
+        });
+
+        // ====================== 密码验证相关 ======================
+        function verifyPassword() {
+            const inputPwd = adminPasswordInput.value.trim();
+            if (!inputPwd) {
+                alert('请输入管理密码！');
+                return;
+            }
+            
+            if (btoa(inputPwd) === adminPassword) {
+                passwordModal.style.display = 'none';
+                adminContainer.style.display = 'block';
+                adminPasswordInput.value = '';
+                passwordErrorTip.style.display = 'none';
+                
+                // 初始化数据显示
+                updateRoundDisplay();
+                updatePasswordDisplay();
+                renderWinList();
+                
+                // 启动实时更新
+                startRealtimeUpdate();
+            } else {
+                passwordErrorTip.style.display = 'block';
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
+            }
+        }
+
+        // ====================== 实时更新功能 ======================
+        // 启动实时更新
+        function startRealtimeUpdate() {
+            // 先清除已有定时器，避免重复
+            if (realtimeTimer) clearInterval(realtimeTimer);
+            
+            // 每隔1秒检查一次数据变化
+            realtimeTimer = setInterval(checkDataChanges, POLLING_INTERVAL);
+        }
+
+        // 检查数据变化并更新
+        function checkDataChanges() {
+            // 1. 检查轮数变化
+            const latestRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
+            if (latestRound !== currentRound) {
+                currentRound = latestRound;
+                updateRoundDisplay();
+                newRoundInput.value = currentRound;
+            }
+            
+            // 2. 检查中奖名单变化
+            const latestWinList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
+            
+            // 对比数据是否变化（简单的JSON字符串对比）
+            if (JSON.stringify(latestWinList) !== JSON.stringify(winList)) {
+                winList = latestWinList;
+                
+                // 如果当前有筛选条件，重新筛选
+                const filterRound = parseInt(filterRoundInput.value);
+                if (!isNaN(filterRound) && filterRound >= 1) {
+                    filteredWinList = winList.filter(item => item.round === filterRound);
+                } else {
+                    filteredWinList = [...winList];
+                }
+                
+                renderWinList();
+            }
+        }
+
+        // ====================== 功能按钮初始化 ======================
+        function initFunctionButtons() {
+            // 轮数管理
+            updateRoundBtn.addEventListener('click', updateRound);
+            resetRoundBtn.addEventListener('click', resetRound);
+            
+            // 密码管理
+            changePasswordBtn.addEventListener('click', changePassword);
+            resetPasswordBtn.addEventListener('click', resetPassword);
+            
+            // 系统管理
+            clearAllDataBtn.addEventListener('click', clearAllData);
+            exportDataBtn.addEventListener('click', exportData);
+            restoreFile.addEventListener('change', importData);
+            refreshSystemBtn.addEventListener('click', refreshSystemData);
+            
+            // 中奖名单管理
+            clearAllBtn.addEventListener('click', clearAllWinRecords);
+            clearRoundBtn.addEventListener('click', clearRoundWinRecords);
+            downloadAllBtn.addEventListener('click', downloadAllWinRecords);
+            refreshListBtn.addEventListener('click', manualRefreshList);
+            filterRoundBtn.addEventListener('click', filterByRound);
+            clearFilterBtn.addEventListener('click', clearFilter);
+        }
+
+        // ====================== 轮数管理功能 ======================
+        // 更新轮数显示
+        function updateRoundDisplay() {
+            currentRoundValue.textContent = currentRound;
+        }
+
+        // 更新轮数
+        function updateRound() {
+            const newRound = parseInt(newRoundInput.value);
+            if (isNaN(newRound) || newRound < 1) {
+                alert('请输入有效的轮数（正整数）！');
+                return;
+            }
+            if (confirm(`确认将抽奖轮数修改为：${newRound} 轮？`)) {
+                currentRound = newRound;
+                localStorage.setItem('lotteryCurrentRound', currentRound);
+                updateRoundDisplay();
+                alert(`轮数已更新为：${newRound} 轮`);
+            }
+        }
+
+        // 重置轮数为1
+        function resetRound() {
+            if (confirm('确认将抽奖轮数重置为1轮？')) {
+                currentRound = 1;
+                localStorage.setItem('lotteryCurrentRound', currentRound);
+                updateRoundDisplay();
+                newRoundInput.value = 1;
+                alert('轮数已重置为1轮');
+            }
+        }
+
+        // ====================== 密码管理功能 ======================
+        // 更新密码显示
+        function updatePasswordDisplay() {
+            const currentPwd = atob(adminPassword);
+            if (currentPwd === DEFAULT_PASSWORD) {
+                currentPasswordValue.textContent = '默认密码(123456)';
+                currentPasswordValue.style.color = '#e74c3c';
+            } else {
+                currentPasswordValue.textContent = '已设置自定义密码';
+                currentPasswordValue.style.color = '#27ae60';
+            }
+        }
+
+        // 修改密码
+        function changePassword() {
+            const newPwd = newPasswordInput.value.trim();
+            if (!newPwd) {
+                alert('请输入新密码！');
+                newPasswordInput.focus();
+                return;
+            }
+            
+            if (newPwd.length < 6) {
+                alert('密码长度不能少于6位！');
+                newPasswordInput.focus();
+                return;
+            }
+            
+            if (confirm(`确认将管理密码修改为：${newPwd} 吗？\n请牢记新密码！`)) {
+                adminPassword = btoa(newPwd);
+                localStorage.setItem('lotteryAdminPassword', adminPassword);
+                newPasswordInput.value = '';
+                updatePasswordDisplay();
+                alert('密码修改成功！请使用新密码登录。');
+            }
+        }
+
+        // 重置为默认密码
+        function resetPassword() {
+            if (confirm(`确认将密码重置为默认密码：${DEFAULT_PASSWORD} 吗？`)) {
+                adminPassword = btoa(DEFAULT_PASSWORD);
+                localStorage.setItem('lotteryAdminPassword', adminPassword);
+                updatePasswordDisplay();
+                alert(`密码已重置为默认密码：${DEFAULT_PASSWORD}`);
+            }
+        }
+
+        // ====================== 系统管理功能 ======================
+        // 清空所有系统数据
+        function clearAllData() {
+            if (confirm('⚠️ 危险操作！\n确认清空所有系统数据吗？\n包括：轮数、中奖名单、姓名列表、数字范围等所有数据！\n此操作不可逆！')) {
+                // 清空所有相关本地存储
+                localStorage.removeItem('lotteryCurrentRound');
+                localStorage.removeItem('lotteryWinList');
+                localStorage.removeItem('teacherNames');
+                localStorage.removeItem('lotteryRange');
+                
+                // 重置全局变量
+                currentRound = 1;
+                winList = [];
+                filteredWinList = [];
+                
+                // 更新显示
+                updateRoundDisplay();
+                newRoundInput.value = 1;
+                renderWinList();
+                
+                alert('所有系统数据已清空！系统已恢复初始状态。');
+            }
+        }
+
+        // 导出系统数据备份
+        function exportData() {
+            // 收集所有系统数据
+            const systemData = {
+                version: 'v1.0',
+                exportTime: new Date().toLocaleString(),
+                currentRound: currentRound,
+                winList: winList,
+                teacherNames: JSON.parse(localStorage.getItem('teacherNames')) || [],
+                lotteryRange: JSON.parse(localStorage.getItem('lotteryRange')) || {min: 1, max: 99}
+            };
+            
+            // 创建JSON文件并下载
+            const blob = new Blob([JSON.stringify(systemData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `育仁中学抽奖系统数据备份_${new Date().getTime()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`🎉 系统数据备份成功！\n备份包含：\n- 当前轮数：${currentRound}\n- 中奖记录：${winList.length}条\n- 教师姓名：${systemData.teacherNames.length}条\n- 数字抽奖范围：${systemData.lotteryRange.min}-${systemData.lotteryRange.max}`);
+        }
+
+        // 导入数据备份
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+                alert('请选择有效的JSON备份文件！');
+                this.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const restoreData = JSON.parse(e.target.result);
+                    
+                    if (!restoreData || !restoreData.currentRound) {
+                        alert('备份文件格式错误，无法恢复！');
+                        return;
+                    }
+                    
+                    if (confirm(`确认恢复数据备份吗？\n备份导出时间：${restoreData.exportTime || '未知'}\n恢复后将覆盖当前所有数据！`)) {
+                        // 恢复数据到本地存储
+                        localStorage.setItem('lotteryCurrentRound', restoreData.currentRound);
+                        localStorage.setItem('lotteryWinList', JSON.stringify(restoreData.winList || []));
+                        localStorage.setItem('teacherNames', JSON.stringify(restoreData.teacherNames || []));
+                        localStorage.setItem('lotteryRange', JSON.stringify(restoreData.lotteryRange || {min: 1, max: 99}));
+                        
+                        // 更新全局变量
+                        currentRound = restoreData.currentRound;
+                        winList = restoreData.winList || [];
+                        filteredWinList = [...winList];
+                        
+                        // 更新显示
+                        updateRoundDisplay();
+                        newRoundInput.value = currentRound;
+                        renderWinList();
+                        
+                        alert('🎉 数据恢复成功！\n- 轮数已恢复为：' + currentRound + '\n- 中奖记录恢复：' + winList.length + '条');
+                    }
+                } catch (error) {
+                    console.error('恢复数据失败：', error);
+                    alert('备份文件解析失败！可能是文件损坏或格式错误。');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 刷新系统数据
+        function refreshSystemData() {
+            // 重新从本地存储加载数据
+            currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
+            winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
+            filteredWinList = [...winList];
+            
+            // 更新显示
+            updateRoundDisplay();
+            newRoundInput.value = currentRound;
+            renderWinList();
+            updatePasswordDisplay();
+            
+            alert('系统数据已刷新！');
+        }
+
+        // ====================== 中奖名单管理 ======================
+        // 渲染中奖名单表格
+        function renderWinList() {
+            winListTbody.innerHTML = '';
+            
+            if (filteredWinList.length === 0) {
+                winListTbody.innerHTML = '<tr><td colspan="6" class="empty-tip">暂无中奖记录</td></tr>';
+                return;
+            }
+
+            // 倒序渲染（最新的在最上面）
+            filteredWinList.reverse().forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="round-cell">${item.round}轮</td>
+                    <td class="type-cell">${item.type}</td>
+                    <td>${item.content}</td>
+                    <td>${item.time}</td>
+                    <td>
+                        <button class="oper-btn delete-btn" data-index="${filteredWinList.length - 1 - index}">删除</button>
+                    </td>
+                `;
+                winListTbody.appendChild(tr);
+            });
+
+            // 绑定删除按钮事件
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const realIndex = parseInt(this.getAttribute('data-index'));
+                    deleteWinItem(realIndex);
+                });
+            });
+        }
+
+        // 删除单条中奖记录
+        function deleteWinItem(index) {
+            if (confirm('确认删除这条中奖记录吗？删除后无法恢复！')) {
+                winList.splice(index, 1);
+                localStorage.setItem('lotteryWinList', JSON.stringify(winList));
+                filteredWinList = [...winList];
+                renderWinList();
+                alert('记录已删除');
+            }
+        }
+
+        // 清空所有中奖记录
+        function clearAllWinRecords() {
+            if (confirm('⚠️ 警告：确认清空所有中奖记录吗？此操作不可逆！')) {
+                localStorage.removeItem('lotteryWinList');
+                winList = [];
+                filteredWinList = [];
+                renderWinList();
+                alert('所有中奖记录已清空');
+            }
+        }
+
+        // 清空指定轮数的记录
+        function clearRoundWinRecords() {
+            const round = prompt('请输入要清空的轮数：', '1');
+            if (!round) return;
+            
+            const roundNum = parseInt(round);
+            if (isNaN(roundNum) || roundNum < 1) {
+                alert('请输入有效的轮数（正整数）！');
+                return;
+            }
+
+            if (confirm(`确认清空第 ${roundNum} 轮的所有中奖记录吗？`)) {
+                winList = winList.filter(item => item.round !== roundNum);
+                localStorage.setItem('lotteryWinList', JSON.stringify(winList));
+                filteredWinList = [...winList];
+                renderWinList();
+                alert(`第 ${roundNum} 轮的中奖记录已清空`);
+            }
+        }
+
+        // 下载全部中奖名单
+        function downloadAllWinRecords() {
+            if (winList.length === 0) {
+                alert('暂无中奖记录，无法下载！');
+                return;
+            }
+            
+            // 整理下载数据
+            const downloadData = winList.map((item, index) => ({
+                '序号': index + 1,
+                '抽奖轮数': `${item.round}轮`,
+                '抽奖类型': item.type,
+                '中奖内容': item.content,
+                '中奖时间': item.time
+            }));
+            
+            // 创建工作簿和工作表
+            const worksheet = XLSX.utils.json_to_sheet(downloadData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, '中奖名单');
+            
+            // 生成并下载Excel文件
+            const fileName = `育仁中学2026年会中奖名单_完整_${new Date().getTime()}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+            
+            alert(`🎉 中奖名单已下载！\n文件名称：${fileName}\n共包含 ${winList.length} 条中奖记录。`);
+        }
+
+        // 手动刷新名单
+        function manualRefreshList() {
+            winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
+            filteredWinList = [...winList];
+            renderWinList();
+            // 无感知刷新，不弹窗
+        }
+
+        // 按轮数筛选
+        function filterByRound() {
+            const round = parseInt(filterRoundInput.value);
+            if (isNaN(round) || round < 1) {
+                alert('请输入有效的轮数（正整数）！');
+                return;
+            }
+            
+            filteredWinList = winList.filter(item => item.round === round);
+            renderWinList();
+            alert(`已筛选出第 ${round} 轮的中奖记录，共 ${filteredWinList.length} 条`);
+        }
+
+        // 清空筛选
+        function clearFilter() {
+            filterRoundInput.value = '';
+            filteredWinList = [...winList];
+            renderWinList();
+            alert('筛选条件已清空，显示全部记录');
+        }
+
+        // ====================== 修复返回按钮跳转 ======================
+        function fixBackButtonLink() {
+            // 增加跳转容错处理
+            backToLotteryBtn.addEventListener('click', function(e) {
+                // 先尝试正常跳转
+                setTimeout(() => {
+                    // 如果500ms后还在当前页面，说明跳转失败，尝试其他路径
+                    if (window.location.pathname.includes('admin.html')) {
+                        // 尝试上级目录
+                        window.location.href = '../index.html';
+                    }
+                }, 500);
+            });
+        }
+
+        // 页面关闭时清除定时器
+        window.addEventListener('beforeunload', function() {
+            if (realtimeTimer) clearInterval(realtimeTimer);
+        });
+    </script>
+</body>
+</html>
