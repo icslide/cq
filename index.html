@@ -3,1003 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重庆市育仁中学校2026年会抽奖系统</title>
-    <style>
-        /* 全局样式重置 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 30px 20px;
-            position: relative;
-        }
-
-        /* 主容器：抽奖区+名单区横向布局 */
-        .main-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 20px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* 抽奖主容器 */
-        .lottery-container {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            padding: 60px 80px;
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-            text-align: center;
-            flex: 1;
-            min-width: 600px;
-        }
-
-        /* 中奖名单悬浮模块 */
-        .win-list-aside {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-            width: 320px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: sticky;
-            top: 30px;
-            display: flex;
-            flex-direction: column;
-        }
-        /* 名单头部 */
-        .win-list-header {
-            padding: 15px 20px;
-            background-color: #1a2980;
-            border-radius: 16px 16px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .win-list-title {
-            font-size: 18px;
-            color: white;
-            font-weight: 600;
-        }
-        .win-list-oper {
-            display: flex;
-            gap: 8px;
-        }
-        .list-btn {
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            color: white;
-            background-color: rgba(255,255,255,0.3);
-            transition: all 0.2s ease;
-        }
-        .list-btn:hover {
-            background-color: rgba(255,255,255,0.5);
-        }
-        /* 名单内容区 */
-        .win-list-content {
-            padding: 15px;
-            flex: 1;
-        }
-        .win-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-        .win-item:last-child {
-            border-bottom: none;
-        }
-        .win-round { /* 新增：轮数样式 */
-            width: 40px;
-            text-align: center;
-            color: #f39c12;
-            font-weight: 600;
-        }
-        .win-type {
-            width: 50px;
-            text-align: center;
-            color: #1a2980;
-            font-weight: 600;
-        }
-        .win-content {
-            flex: 1;
-            text-align: left;
-            padding: 0 10px;
-            color: #333;
-        }
-        .win-time {
-            width: 90px;
-            text-align: right;
-            color: #999;
-            font-size: 12px;
-        }
-        .empty-win-tip {
-            text-align: center;
-            color: #999;
-            font-size: 14px;
-        }
-        /* 名单收起样式 */
-        .win-list-aside.collapse {
-            width: 40px;
-            overflow: hidden;
-        }
-        .win-list-aside.collapse .win-list-header .win-list-title,
-        .win-list-aside.collapse .win-list-oper .list-btn:not(.collapse-btn),
-        .win-list-aside.collapse .win-list-content {
-            display: none;
-        }
-        .win-list-aside.collapse .win-list-header {
-            justify-content: center;
-        }
-        .win-list-aside.collapse .collapse-btn {
-            transform: rotate(180deg);
-        }
-
-        /* 抽奖标题样式 */
-        .lottery-title {
-            font-size: 46px;
-            color: #1a2980;
-            margin-bottom: 40px;
-            font-weight: bold;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.12);
-        }
-
-        /* 切换标签 */
-        .tab-switch {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            gap: 10px;
-        }
-
-        .tab-btn {
-            padding: 12px 30px;
-            font-size: 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            background-color: #e8f4f8;
-            color: #1a2980;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            background-color: #1a2980;
-            color: white;
-        }
-
-        .tab-btn:hover:not(.active) {
-            background-color: #d1e7dd;
-        }
-
-        /* 名额选择区域 */
-        .quota-select {
-            margin: 20px 0 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .quota-label {
-            font-size: 22px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .quota-btn {
-            padding: 10px 30px;
-            font-size: 18px;
-            border: 2px solid #26d0ce;
-            border-radius: 8px;
-            cursor: pointer;
-            background-color: white;
-            color: #1a2980;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .quota-btn.active {
-            background-color: #1a2980;
-            color: white;
-            border-color: #1a2980;
-        }
-
-        /* 内容区域 */
-        .content-panel {
-            display: none;
-        }
-
-        .content-panel.active {
-            display: block;
-        }
-
-        /* 范围设置区域 */
-        .range-setting {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .range-label {
-            font-size: 22px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .range-input {
-            padding: 14px 18px;
-            font-size: 20px;
-            border: 2px solid #26d0ce;
-            border-radius: 10px;
-            width: 130px;
-            text-align: center;
-            outline: none;
-        }
-
-        .range-input:focus {
-            border-color: #1a2980;
-            box-shadow: 0 0 10px rgba(26, 41, 128, 0.25);
-        }
-
-        .range-separator {
-            font-size: 26px;
-            color: #7f8c8d;
-            font-weight: bold;
-        }
-
-        /* Excel导入区域 */
-        .excel-import {
-            margin: 0 auto 20px;
-            padding: 30px;
-            background-color: #f8f9fa;
-            border-radius: 15px;
-            border: 2px dashed #26d0ce;
-            max-width: 600px;
-        }
-
-        .import-label {
-            font-size: 22px;
-            color: #2c3e50;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        /* 文件上传样式 */
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .upload-btn {
-            display: inline-block;
-            padding: 12px 40px;
-            font-size: 18px;
-            background-color: #26d0ce;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .upload-btn:hover {
-            background-color: #1a2980;
-        }
-
-        #excelFile {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-name {
-            font-size: 16px;
-            color: #7f8c8d;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .parse-btn {
-            padding: 10px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background-color: #1a2980;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-        }
-
-        .parse-btn:hover {
-            background-color: #27ae60;
-        }
-
-        .tip-text {
-            font-size: 16px;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .name-count-tip {
-            font-size: 18px;
-            color: #27ae60;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        /* 显示区域（数字/姓名） */
-        .display-area {
-            font-size: 40px;
-            font-weight: bold;
-            color: #e74c3c;
-            margin: 40px 0;
-            min-height: 280px;
-            line-height: 60px;
-            border: 6px solid #26d0ce;
-            border-radius: 20px;
-            background-color: #f8f9fa;
-            letter-spacing: 4px;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.08);
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .winner-item {
-            background-color: #fff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin: 5px;
-        }
-
-        /* 抽奖按钮样式（单按钮） */
-        .lottery-btn {
-            padding: 25px 80px;
-            font-size: 32px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            min-width: 300px;
-        }
-        /* 开始抽奖样式（绿色） */
-        .lottery-btn.start {
-            background-color: #27ae60;
-            color: white;
-        }
-        .lottery-btn.start:hover {
-            background-color: #219653;
-            transform: scale(1.05);
-        }
-        /* 停止抽奖样式（红色） */
-        .lottery-btn.stop {
-            background-color: #e74c3c;
-            color: white;
-        }
-        .lottery-btn.stop:hover {
-            background-color: #d32f2f;
-            transform: scale(1.05);
-        }
-
-        /* 中奖提示 */
-        .win-tip {
-            font-size: 36px;
-            color: #f39c12;
-            margin: 30px 0 0;
-            font-weight: bold;
-            display: none;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.15);
-            animation: bounce 1s ease infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-12px); }
-        }
-
-        /* 管理入口 */
-        .admin-entrance {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: rgba(26, 41, 128, 0.8);
-            color: white;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-
-        .admin-entrance:hover {
-            background-color: #1a2980;
-        }
-
-        /* 轮数显示样式（新增） */
-        .round-display {
-            font-size: 20px;
-            color: #1a2980;
-            margin: 10px 0 20px;
-            font-weight: 600;
-        }
-
-        /* 响应式适配 */
-        @media (max-width: 1024px) {
-            .main-wrap {
-                flex-direction: column;
-                align-items: center;
-            }
-            .lottery-container {
-                min-width: 100%;
-                padding: 40px 30px;
-            }
-            .win-list-aside {
-                width: 100%;
-                max-height: 300px;
-                position: static;
-            }
-            .lottery-title {
-                font-size: 32px;
-            }
-            .display-area {
-                font-size: 28px;
-                min-height: 200px;
-                line-height: 40px;
-                letter-spacing: 2px;
-            }
-            .lottery-btn {
-                padding: 20px 60px;
-                font-size: 24px;
-                min-width: 200px;
-            }
-            .range-input {
-                width: 100px;
-                font-size: 18px;
-            }
-            .quota-btn {
-                padding: 8px 20px;
-                font-size: 16px;
-            }
-            .excel-import {
-                padding: 20px;
-            }
-            .win-tip {
-                font-size: 28px;
-            }
-        }
-    </style>
-    <!-- 引入处理Excel的第三方库 -->
+    <title>重庆市育仁中学校2025年会抽奖系统</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入SheetJS库处理Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- 管理页面入口 -->
-    <a href="admin.html" class="admin-entrance">H</a>
-
-    <!-- 主容器，包含抽奖区和名单区 -->
-    <div class="main-wrap">
-        <!-- 原有抽奖容器 -->
-        <div class="lottery-container">
-            <h1 class="lottery-title">重庆市育仁中学校2026年会抽奖</h1>
-            
-            <!-- 新增：当前抽奖轮数显示 -->
-            <div class="round-display" id="roundDisplay">当前抽奖轮数：第 1 轮</div>
-            
-            <!-- 切换标签：数字抽奖/姓名抽奖 -->
-            <div class="tab-switch">
-                <button class="tab-btn active" data-tab="number-tab">数字抽奖</button>
-                <button class="tab-btn" data-tab="name-tab">教师姓名抽奖</button>
+    <div class="container">
+        <h1>重庆市育仁中学校2025年会抽奖</h1>
+        
+        <!-- 设置区域 -->
+        <div class="settings">
+            <h2>抽奖设置</h2>
+            <div class="settings-item">
+                <label for="minNum">数字最小值：</label>
+                <input type="number" id="minNum" value="1" min="1">
             </div>
-
-            <!-- 名额选择区域 -->
-            <div class="quota-select">
-                <span class="quota-label">本次抽奖名额：</span>
-                <button class="quota-btn active" data-quota="1">1个名额</button>
-                <button class="quota-btn" data-quota="10">10个名额</button>
+            <div class="settings-item">
+                <label for="maxNum">数字最大值：</label>
+                <input type="number" id="maxNum" value="100" min="1">
             </div>
-
-            <!-- 数字抽奖面板 -->
-            <div class="content-panel active" id="number-tab">
-                <div class="range-setting">
-                    <span class="range-label">抽奖范围：</span>
-                    <input type="number" class="range-input" id="minNumInput" value="1" min="1" placeholder="最小值">
-                    <span class="range-separator">-</span>
-                    <input type="number" class="range-input" id="maxNumInput" value="99" min="1" placeholder="最大值">
-                </div>
+            <div class="settings-item">
+                <label for="drawCount">抽取数量：</label>
+                <select id="drawCount">
+                    <option value="1">1个</option>
+                    <option value="10">10个</option>
+                </select>
             </div>
-
-            <!-- 姓名抽奖面板（Excel导入） -->
-            <div class="content-panel" id="name-tab">
-                <div class="excel-import">
-                    <span class="import-label">导入教师姓名（Excel文件）：</span>
-                    <!-- 文件上传按钮 -->
-                    <div class="file-upload">
-                        <span class="upload-btn">选择Excel文件</span>
-                        <input type="file" id="excelFile" accept=".xlsx, .xls">
-                    </div>
-                    <!-- 显示选中的文件名 -->
-                    <span class="file-name" id="fileName">未选择文件</span>
-                    <!-- 解析按钮 -->
-                    <button class="parse-btn" id="parseExcelBtn" disabled>解析Excel名单</button>
-                    <!-- 提示信息 -->
-                    <p class="tip-text">📌 提示：Excel文件要求 - 第一列为教师姓名，无表头（示例：A1=张三, A2=李四, A3=王五）</p>
-                    <p class="tip-text">支持格式：.xlsx / .xls，请勿上传空文件或格式错误的文件</p>
-                    <!-- 姓名数量提示 -->
-                    <p class="name-count-tip" id="nameCountTip">当前未导入任何姓名</p>
-                </div>
+            <div class="settings-item">
+                <label for="excelUpload">导入教师名单：</label>
+                <input type="file" id="excelUpload" accept=".xlsx,.xls">
             </div>
-
-            <!-- 显示区域 -->
-            <div class="display-area" id="displayArea">0</div>
-            
-            <!-- 单抽奖按钮 -->
-            <button class="lottery-btn start" id="lotteryBtn">开始抽奖</button>
-            
-            <!-- 中奖提示 -->
-            <div class="win-tip" id="winTip">恭喜中奖！🎉</div>
         </div>
 
-        <!-- 右侧中奖名单展示模块 -->
-        <div class="win-list-aside" id="winListAside">
-            <div class="win-list-header">
-                <div class="win-list-title">中奖名单实时展示</div>
-                <div class="win-list-oper">
-                    <button class="list-btn refresh-list-btn" id="refreshListBtn">刷新</button>
-                    <button class="list-btn download-list-btn" id="downloadListBtn">下载名单</button> <!-- 新增：下载按钮 -->
-                    <button class="list-btn collapse-btn" id="collapseListBtn">收起</button>
-                </div>
-            </div>
-            <div class="win-list-content" id="winListContent">
-                <div class="empty-win-tip">暂无中奖记录</div>
-            </div>
+        <!-- 抽奖区域 -->
+        <div class="lottery-area">
+            <div class="number-display" id="resultDisplay">点击开始抽奖</div>
+            <button class="btn" id="startBtn">开始抽奖</button>
+            <button class="btn" id="stopBtn" disabled>停止抽奖</button>
+        </div>
+
+        <!-- 中奖名单 -->
+        <div class="winners-list">
+            <h2>中奖名单</h2>
+            <table class="winners-table">
+                <thead>
+                    <tr>
+                        <th>抽奖轮数</th>
+                        <th>中奖号码/姓名</th>
+                    </tr>
+                </thead>
+                <tbody id="winnersTableBody">
+                    <!-- 中奖记录会动态显示在这里 -->
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // 获取页面元素
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const contentPanels = document.querySelectorAll('.content-panel');
-        const displayArea = document.getElementById('displayArea');
-        const lotteryBtn = document.getElementById('lotteryBtn');
-        const winTip = document.getElementById('winTip');
-        const quotaBtns = document.querySelectorAll('.quota-btn');
-        const roundDisplay = document.getElementById('roundDisplay'); // 新增：轮数显示元素
-        const downloadListBtn = document.getElementById('downloadListBtn'); // 新增：下载按钮
-        
-        // 数字抽奖相关元素
-        const minNumInput = document.getElementById('minNumInput');
-        const maxNumInput = document.getElementById('maxNumInput');
-        
-        // Excel导入相关元素
-        const excelFile = document.getElementById('excelFile');
-        const fileName = document.getElementById('fileName');
-        const parseExcelBtn = document.getElementById('parseExcelBtn');
-        const nameCountTip = document.getElementById('nameCountTip');
-
-        // 中奖名单模块元素
-        const winListAside = document.getElementById('winListAside');
-        const winListContent = document.getElementById('winListContent');
-        const refreshListBtn = document.getElementById('refreshListBtn');
-        const collapseListBtn = document.getElementById('collapseListBtn');
-
         // 全局变量
-        let lotteryInterval;       // 抽奖定时器
-        let currentTab = 'number-tab'; // 当前选中的标签
-        let currentQuota = 1;      // 当前抽奖名额（1/10）
-        let minNumber = 1;         // 数字抽奖最小值
-        let maxNumber = 99;        // 数字抽奖最大值
-        let teacherNames = [];     // 教师姓名列表
-        let isNameLotteryReady = false; // 姓名抽奖是否就绪
-        let selectedFile = null;   // 选中的Excel文件
-        let winList = JSON.parse(localStorage.getItem('lotteryWinList')) || []; // 中奖名单
-        let tempWinList = [];      // 临时中奖列表（用于10名额滚动）
-        let isLotteryRunning = false; // 抽奖运行状态标记
-        let currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1; // 新增：当前抽奖轮数
+        let lotteryInterval = null;
+        let isDrawing = false;
+        let teacherList = []; // 存储导入的教师名单
+        let usedNumbers = []; // 已中奖的号码/姓名
+        let currentRound = 0; // 当前抽奖轮数
 
-        // 页面加载时初始化
-        window.addEventListener('load', function() {
-            // 更新轮数显示
-            updateRoundDisplay();
-            
-            // 恢复数字范围
-            const savedRange = JSON.parse(localStorage.getItem('lotteryRange'));
-            if (savedRange) {
-                minNumInput.value = savedRange.min;
-                maxNumInput.value = savedRange.max;
-                minNumber = savedRange.min;
-                maxNumber = savedRange.max;
-            }
-            
-            // 恢复教师姓名列表
-            const savedNames = JSON.parse(localStorage.getItem('teacherNames'));
-            if (savedNames && savedNames.length > 0) {
-                teacherNames = savedNames;
-                isNameLotteryReady = true;
-                if (currentTab === 'name-tab') {
-                    nameCountTip.textContent = `✅ 已导入：共 ${teacherNames.length} 位教师姓名`;
-                    nameCountTip.style.color = '#27ae60';
-                    displayArea.textContent = '名单已导入，可开始抽奖';
-                    displayArea.style.color = '#27ae60';
-                }
-            }
-            
-            // 恢复中奖名单并渲染
-            const savedWinList = JSON.parse(localStorage.getItem('lotteryWinList'));
-            if (savedWinList) {
-                winList = savedWinList;
-            }
-            renderWinListAside(); // 渲染侧边中奖名单
-        });
+        // DOM元素
+        const resultDisplay = document.getElementById('resultDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const minNumInput = document.getElementById('minNum');
+        const maxNumInput = document.getElementById('maxNum');
+        const drawCountSelect = document.getElementById('drawCount');
+        const excelUpload = document.getElementById('excelUpload');
+        const winnersTableBody = document.getElementById('winnersTableBody');
 
-        // 新增：更新轮数显示
-        function updateRoundDisplay() {
-            roundDisplay.textContent = `当前抽奖轮数：第 ${currentRound} 轮`;
-            localStorage.setItem('lotteryCurrentRound', currentRound);
+        // 初始化：从本地存储加载数据
+        function init() {
+            // 加载已中奖记录
+            const savedWinners = localStorage.getItem('lotteryWinners');
+            const savedUsedNumbers = localStorage.getItem('usedNumbers');
+            const savedRound = localStorage.getItem('currentRound');
+            
+            if (savedWinners) {
+                renderWinnersList(JSON.parse(savedWinners));
+            }
+            if (savedUsedNumbers) {
+                usedNumbers = JSON.parse(savedUsedNumbers);
+            }
+            if (savedRound) {
+                currentRound = parseInt(savedRound);
+            }
+
+            // 监听Excel上传
+            excelUpload.addEventListener('change', handleExcelUpload);
+
+            // 抽奖按钮事件
+            startBtn.addEventListener('click', startLottery);
+            stopBtn.addEventListener('click', stopLottery);
+
+            // 实时监听本地存储变化（同步管理页面的修改）
+            window.addEventListener('storage', handleStorageChange);
+
+            // 定时刷新中奖名单（防止手动修改本地存储）
+            setInterval(refreshWinnersList, 1000);
         }
 
-        // 1. 标签切换逻辑
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                stopLotteryOnly(); // 仅停止滚动，不记录名单
-                tabBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentTab = this.getAttribute('data-tab');
-                contentPanels.forEach(panel => {
-                    panel.classList.remove('active');
-                    if (panel.id === currentTab) {
-                        panel.classList.add('active');
-                    }
-                });
-                // 重置显示区域和临时列表
-                displayArea.textContent = currentTab === 'number-tab' ? '0' : '请导入Excel名单';
-                displayArea.style.color = '#e74c3c';
-                winTip.style.display = 'none';
-                tempWinList = [];
-            });
-        });
-
-        // 2. 抽奖名额切换逻辑
-        quotaBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                stopLotteryOnly(); // 仅停止滚动，不记录名单
-                quotaBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentQuota = parseInt(this.getAttribute('data-quota'));
-                // 重置显示区域和临时列表
-                displayArea.textContent = currentTab === 'number-tab' ? '0' : '请导入Excel名单';
-                displayArea.style.color = '#e74c3c';
-                winTip.style.display = 'none';
-                tempWinList = [];
-            });
-        });
-
-        // 3. 数字范围验证与更新
-        function updateNumberRange() {
-            let min = parseInt(minNumInput.value) || 1;
-            let max = parseInt(maxNumInput.value) || 99;
-            if (min > max) {
-                [min, max] = [max, min];
-                minNumInput.value = min;
-                maxNumInput.value = max;
-            }
-            minNumber = min;
-            maxNumber = max;
-            localStorage.setItem('lotteryRange', JSON.stringify({min: minNumber, max: maxNumber}));
-        }
-
-        // 4. Excel文件选择逻辑
-        excelFile.addEventListener('change', function(e) {
+        // 处理Excel上传
+        function handleExcelUpload(e) {
             const file = e.target.files[0];
-            if (file) {
-                const fileExt = file.name.split('.').pop().toLowerCase();
-                if (fileExt !== 'xlsx' && fileExt !== 'xls') {
-                    alert('请选择正确的Excel文件（.xlsx 或 .xls格式）！');
-                    this.value = '';
-                    fileName.textContent = '未选择文件';
-                    parseExcelBtn.disabled = true;
-                    selectedFile = null;
-                    return;
-                }
-                selectedFile = file;
-                fileName.textContent = `已选择：${file.name}`;
-                parseExcelBtn.disabled = false;
-            } else {
-                selectedFile = null;
-                fileName.textContent = '未选择文件';
-                parseExcelBtn.disabled = true;
-            }
-        });
+            if (!file) return;
 
-        // 5. 解析Excel文件逻辑
-        parseExcelBtn.addEventListener('click', function() {
-            if (!selectedFile) {
-                alert('请先选择有效的Excel文件！');
-                return;
-            }
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // 读取第一个工作表
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    teacherNames = jsonData
-                        .map(row => (row[0] ? String(row[0]).trim() : ''))
-                        .filter(name => name && name !== '姓名' && name !== '姓名列表');
-                    if (teacherNames.length === 0) {
-                        alert('未从Excel文件中解析到有效姓名！请检查文件格式（第一列为姓名，无表头）。');
-                        nameCountTip.textContent = '当前未导入任何姓名';
-                        nameCountTip.style.color = '#e74c3c';
-                        isNameLotteryReady = false;
-                        displayArea.textContent = '解析失败';
-                        displayArea.style.color = '#e74c3c';
-                        return;
+                    
+                    // 转换为JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // 提取教师姓名（假设Excel第一列是姓名，字段名为"姓名"或第一个字段）
+                    if (jsonData.length > 0) {
+                        const nameKey = Object.keys(jsonData[0])[0];
+                        teacherList = jsonData.map(item => item[nameKey]).filter(name => name);
+                        alert(`成功导入 ${teacherList.length} 位教师名单！`);
+                        
+                        // 更新数字范围为教师名单长度
+                        minNumInput.value = 1;
+                        maxNumInput.value = teacherList.length;
+                    } else {
+                        alert('Excel中未读取到有效数据！');
                     }
-                    if (teacherNames.length < 10) {
-                        alert(`提示：当前仅导入${teacherNames.length}位教师姓名，选择10名额抽奖时可能会重复抽取！`);
-                    }
-                    localStorage.setItem('teacherNames', JSON.stringify(teacherNames));
-                    nameCountTip.textContent = `✅ 成功解析：共 ${teacherNames.length} 位教师姓名`;
-                    nameCountTip.style.color = '#27ae60';
-                    isNameLotteryReady = true;
-                    displayArea.textContent = '名单已导入，可开始抽奖';
-                    displayArea.style.color = '#27ae60';
-                    alert(`🎉 解析成功！\n共导入 ${teacherNames.length} 位教师姓名，可开始抽奖。`);
                 } catch (error) {
-                    console.error('解析Excel失败：', error);
-                    alert('Excel文件解析失败！可能是文件损坏、格式错误或非Excel文件，请检查后重新上传。');
-                    nameCountTip.textContent = '解析失败，请重新上传';
-                    nameCountTip.style.color = '#e74c3c';
-                    isNameLotteryReady = false;
+                    console.error('Excel解析失败：', error);
+                    alert('Excel解析失败，请检查文件格式！');
                 }
             };
-            reader.readAsArrayBuffer(selectedFile);
-        });
+            reader.readAsArrayBuffer(file);
+        }
 
-        // 6. 抽奖按钮点击事件（开始/停止切换）
-        lotteryBtn.addEventListener('click', function() {
-            if (!isLotteryRunning) {
-                startLottery();
-            } else {
-                stopLotteryWithRecord(); // 点击停止时，执行带记录的完整逻辑
-            }
-        });
-
-        // 7. 快捷键支持：空格键快速开始/停止
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                lotteryBtn.click();
-            }
-        });
-
-        // 8. 开始抽奖核心函数
+        // 开始抽奖
         function startLottery() {
-            winTip.style.display = 'none';
-            displayArea.style.color = '#e74c3c';
-            tempWinList = [];
-            isLotteryRunning = true;
-            lotteryBtn.classList.remove('start');
-            lotteryBtn.classList.add('stop');
-            lotteryBtn.textContent = '停止抽奖';
+            if (isDrawing) return;
 
-            if (currentTab === 'number-tab') {
-                updateNumberRange();
-                const numberCount = maxNumber - minNumber + 1;
-                if (currentQuota === 10 && numberCount < 10) {
-                    alert(`提示：当前数字范围仅${numberCount}个数字，选择10名额抽奖时可能会重复抽取！`);
-                }
-                startNumberLottery();
-            } else {
-                if (!isNameLotteryReady || teacherNames.length === 0) {
-                    alert('请先导入并解析有效的教师姓名Excel名单！');
-                    isLotteryRunning = false;
-                    lotteryBtn.classList.remove('stop');
-                    lotteryBtn.classList.add('start');
-                    lotteryBtn.textContent = '开始抽奖';
-                    return;
-                }
-                if (currentQuota === 10 && teacherNames.length < 10) {
-                    alert(`提示：当前仅导入${teacherNames.length}位教师姓名，选择10名额抽奖时可能会重复抽取！`);
-                }
-                startNameLottery();
-            }
-        }
+            const minNum = parseInt(minNumInput.value) || 1;
+            const maxNum = parseInt(maxNumInput.value) || 100;
+            const drawCount = parseInt(drawCountSelect.value) || 1;
 
-        // 纯停止滚动函数（无名单记录）
-        function stopLotteryOnly() {
-            if (lotteryInterval) {
-                clearInterval(lotteryInterval);
-                lotteryInterval = null;
+            // 检查是否还有未中奖的号码
+            const totalNumbers = maxNum - minNum + 1;
+            if (usedNumbers.length >= totalNumbers) {
+                alert('所有号码都已中奖，无法继续抽奖！');
+                return;
             }
-            if (isLotteryRunning) {
-                isLotteryRunning = false;
-                lotteryBtn.classList.remove('stop');
-                lotteryBtn.classList.add('start');
-                lotteryBtn.textContent = '开始抽奖';
-            }
-            winTip.style.display = 'none';
-        }
 
-        // 带记录的停止函数
-        function stopLotteryWithRecord() {
-            if (lotteryInterval) {
-                clearInterval(lotteryInterval);
-                lotteryInterval = null;
-            }
-            isLotteryRunning = false;
-            lotteryBtn.classList.remove('stop');
-            lotteryBtn.classList.add('start');
-            lotteryBtn.textContent = '开始抽奖';
-            renderWinResult(); // 渲染中奖结果
-            winTip.style.display = 'block'; // 显示中奖提示
-            recordWinList(); // 记录中奖名单到本地存储
-            renderWinListAside(); // 刷新侧边中奖名单
-            
-            // 新增：抽奖轮数递增并更新显示
-            currentRound++;
-            updateRoundDisplay();
-        }
+            isDrawing = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
 
-        // 9. 数字抽奖 - 启动滚动
-        function startNumberLottery() {
+            // 开始滚动显示随机数
             lotteryInterval = setInterval(() => {
-                tempWinList = [];
-                for (let i = 0; i < currentQuota; i++) {
-                    const randomNum = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
-                    tempWinList.push(randomNum.toString().padStart(2, '0'));
+                let displayContent = '';
+                for (let i = 0; i < drawCount; i++) {
+                    // 生成未中奖的随机数
+                    let randomNum;
+                    do {
+                        randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+                    } while (usedNumbers.includes(randomNum));
+                    
+                    // 如果有教师名单，显示姓名，否则显示数字
+                    const displayText = teacherList[randomNum - 1] || randomNum;
+                    displayContent += displayText + (i < drawCount - 1 ? ' | ' : '');
                 }
-                let displayHtml = '';
-                tempWinList.forEach(num => {
-                    displayHtml += `<span class="winner-item">${num}</span>`;
-                });
-                displayArea.innerHTML = displayHtml;
+                resultDisplay.textContent = displayContent;
             }, 50);
         }
 
-        // 10. 姓名抽奖 - 启动滚动
-        function startNameLottery() {
-            lotteryInterval = setInterval(() => {
-                tempWinList = [];
-                for (let i = 0; i < currentQuota; i++) {
-                    const randomIndex = Math.floor(Math.random() * teacherNames.length);
-                    tempWinList.push(teacherNames[randomIndex]);
+        // 停止抽奖
+        function stopLottery() {
+            if (!isDrawing) return;
+
+            clearInterval(lotteryInterval);
+            isDrawing = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+
+            // 获取最终中奖结果
+            const winningResults = resultDisplay.textContent.split(' | ');
+            const minNum = parseInt(minNumInput.value) || 1;
+            
+            // 记录中奖号码（数字）和结果（姓名/数字）
+            const winningNumbers = winningResults.map(result => {
+                // 如果是姓名，转换为对应的数字
+                if (teacherList.length > 0) {
+                    const index = teacherList.findIndex(name => name === result);
+                    return index + 1;
                 }
-                let displayHtml = '';
-                tempWinList.forEach(name => {
-                    displayHtml += `<span class="winner-item">${name}</span>`;
-                });
-                displayArea.innerHTML = displayHtml;
-            }, 80);
-        }
-
-        // 11. 渲染最终中奖结果
-        function renderWinResult() {
-            let displayHtml = '';
-            tempWinList.forEach((item) => {
-                displayHtml += `<span class="winner-item" style="color: #27ae60; font-size: ${currentQuota === 10 ? '28px' : '60px'};">${item}</span>`;
+                return parseInt(result);
             });
-            displayArea.innerHTML = displayHtml;
+
+            // 更新已中奖号码列表
+            usedNumbers = [...usedNumbers, ...winningNumbers];
+            currentRound++;
+
+            // 保存中奖记录
+            const winnersRecord = {
+                round: currentRound,
+                results: winningResults
+            };
+
+            // 从本地存储获取现有记录
+            const savedWinners = JSON.parse(localStorage.getItem('lotteryWinners') || '[]');
+            savedWinners.push(winnersRecord);
+
+            // 保存到本地存储
+            localStorage.setItem('lotteryWinners', JSON.stringify(savedWinners));
+            localStorage.setItem('usedNumbers', JSON.stringify(usedNumbers));
+            localStorage.setItem('currentRound', currentRound.toString());
+
+            // 更新中奖名单显示
+            renderWinnersList(savedWinners);
+
+            alert(`恭喜！第${currentRound}轮中奖者：${winningResults.join('、')}`);
         }
 
-        // 12. 记录中奖信息到本地存储（新增轮数字段）
-        function recordWinList() {
-            const winTime = new Date().toLocaleString('zh-CN');
-            const winType = currentTab === 'number-tab' ? '数字' : '姓名';
-            // 记录当前轮数（注意：是抽奖前的轮数，因为停止后才递增）
-            const recordRound = currentRound;
-            tempWinList.forEach(winContent => {
-                winList.push({
-                    round: recordRound, // 新增：轮数
-                    type: winType,
-                    content: winContent,
-                    time: winTime,
-                    quotaBatch: winTime
-                });
-            });
-            localStorage.setItem('lotteryWinList', JSON.stringify(winList));
-        }
-
-        // 13. 渲染侧边栏中奖名单（新增轮数展示）
-        function renderWinListAside() {
-            const currentWinList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
-            if (currentWinList.length === 0) {
-                winListContent.innerHTML = '<div class="empty-win-tip">暂无中奖记录</div>';
+        // 渲染中奖名单
+        function renderWinnersList(winners) {
+            winnersTableBody.innerHTML = '';
+            if (winners.length === 0) {
+                winnersTableBody.innerHTML = '<tr><td colspan="2">暂无中奖记录</td></tr>';
                 return;
             }
-            // 倒序渲染（最新中奖在最上方）
-            let listHtml = '';
-            currentWinList.reverse().forEach(item => {
-                listHtml += `
-                    <div class="win-item">
-                        <div class="win-round">${item.round}轮</div> <!-- 新增：显示轮数 -->
-                        <div class="win-type">${item.type}</div>
-                        <div class="win-content">${item.content}</div>
-                        <div class="win-time">${item.time}</div>
-                    </div>
+
+            winners.forEach(record => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${record.round}</td>
+                    <td>${record.results.join('、')}</td>
                 `;
+                winnersTableBody.appendChild(tr);
             });
-            winListContent.innerHTML = listHtml;
         }
 
-        // 14. 名单刷新按钮点击事件
-        refreshListBtn.addEventListener('click', function() {
-            renderWinListAside();
-        });
-
-        // 15. 名单收起/展开按钮点击事件
-        collapseListBtn.addEventListener('click', function() {
-            winListAside.classList.toggle('collapse');
-            this.textContent = winListAside.classList.contains('collapse') ? '展开' : '收起';
-        });
-
-        // 新增：下载中奖名单功能
-        downloadListBtn.addEventListener('click', function() {
-            const winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
-            if (winList.length === 0) {
-                alert('暂无中奖记录，无法下载！');
-                return;
+        // 刷新中奖名单
+        function refreshWinnersList() {
+            const savedWinners = localStorage.getItem('lotteryWinners');
+            if (savedWinners) {
+                renderWinnersList(JSON.parse(savedWinners));
             }
-            
-            // 整理下载数据
-            const downloadData = winList.map(item => ({
-                '抽奖轮数': `${item.round}轮`,
-                '抽奖类型': item.type,
-                '中奖内容': item.content,
-                '中奖时间': item.time
-            }));
-            
-            // 创建工作簿和工作表
-            const worksheet = XLSX.utils.json_to_sheet(downloadData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, '中奖名单');
-            
-            // 生成并下载Excel文件
-            const fileName = `育仁中学2026年会中奖名单_${new Date().getTime()}.xlsx`;
-            XLSX.writeFile(workbook, fileName);
-            
-            alert(`🎉 中奖名单已下载！\n文件名称：${fileName}\n共包含 ${winList.length} 条中奖记录。`);
-        });
+        }
+
+        // 处理本地存储变化（同步管理页面修改）
+        function handleStorageChange(e) {
+            if (e.key === 'lotteryWinners' || e.key === 'usedNumbers' || e.key === 'currentRound') {
+                refreshWinnersList();
+                if (e.key === 'usedNumbers') {
+                    usedNumbers = JSON.parse(e.newValue || '[]');
+                }
+                if (e.key === 'currentRound') {
+                    currentRound = parseInt(e.newValue || 0);
+                }
+            }
+        }
+
+        // 初始化
+        window.onload = init;
     </script>
 </body>
-
 </html>
-
