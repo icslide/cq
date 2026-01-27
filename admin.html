@@ -453,24 +453,85 @@
             border-color: #26d0ce;
         }
 
-        /* 中奖名单表格 */
+        /* 中奖名单管理区域 - 优化显示 */
+        .win-list-container {
+            margin-bottom: 30px;
+        }
+
+        /* 表格容器添加固定高度和滚动条 */
+        .win-list-wrapper {
+            max-height: 600px; /* 增加高度，显示更多行 */
+            overflow-y: auto; /* 垂直滚动 */
+            overflow-x: auto; /* 水平滚动 */
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-top: 10px;
+            position: relative;
+            background-color: #fff;
+        }
+
+        /* 滚动条样式 */
+        .win-list-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .win-list-wrapper::-webkit-scrollbar-track {
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .win-list-wrapper::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 5px;
+            border: 2px solid #f8f9fa;
+        }
+
+        .win-list-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* 中奖名单表格 - 优化间距 */
         .win-list-table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
+            border-collapse: separate; /* 使用separate让单元格间距生效 */
+            border-spacing: 0; /* 单元格间距为0 */
+            margin-bottom: 0;
+            table-layout: auto; /* 使用自动布局，更灵活 */
         }
 
         .win-list-table th,
         .win-list-table td {
-            padding: 12px 15px;
+            padding: 12px 15px; /* 增加内边距，提升可读性 */
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0; /* 只保留底部边框 */
+            vertical-align: middle;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5; /* 增加行高，提升可读性 */
+        }
+
+        /* 移除最后一行的底部边框 */
+        .win-list-table tr:last-child td {
+            border-bottom: none;
         }
 
         .win-list-table th {
             background-color: #1a2980;
             color: white;
             font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 14px 15px; /* 表头内边距稍大 */
+            border-bottom: 2px solid #152066;
+            font-size: 15px;
+        }
+
+        .win-list-table tr {
+            height: auto; /* 自动高度，根据内容调整 */
+            min-height: 55px; /* 最小行高 */
+            transition: background-color 0.2s ease;
         }
 
         .win-list-table tr:nth-child(even) {
@@ -481,33 +542,86 @@
             background-color: #e8f4f8;
         }
 
-        .round-cell {
-            color: #f39c12;
+        /* 序号列 */
+        .serial-cell {
+            width: 70px;
+            color: #666;
             font-weight: 600;
+            font-size: 14px;
+            background-color: #f8f9fa;
         }
 
+        /* 轮数列 */
+        .round-cell {
+            width: 90px;
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* 类型列 */
         .type-cell {
+            width: 110px;
             color: #1a2980;
             font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* 内容列 - 优化间距和显示 */
+        .content-cell {
+            min-width: 180px;
+            max-width: 350px; /* 增加最大宽度 */
+            text-align: left;
+            padding: 12px 20px !important; /* 增加左右间距 */
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            word-break: break-all; /* 允许在任意字符处换行 */
+            hyphens: auto; /* 自动断字 */
+            letter-spacing: 0.5px; /* 增加字母间距 */
+        }
+
+        /* 长内容特殊处理 */
+        .content-cell.long-content {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* 时间列 */
+        .time-cell {
+            width: 170px;
+            color: #666;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* 操作列 */
+        .action-cell {
+            width: 110px;
         }
 
         /* 操作列按钮 */
         .oper-btn {
-            padding: 4px 10px;
-            font-size: 12px;
-            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 13px;
+            border-radius: 5px;
             cursor: pointer;
             border: none;
             color: white;
             margin: 2px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .delete-btn {
             background-color: #e74c3c;
+            border: 1px solid #c0392b;
         }
 
         .delete-btn:hover {
             background-color: #c0392b;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
         }
 
         /* 空数据提示 */
@@ -516,24 +630,41 @@
             padding: 50px;
             color: #999;
             font-size: 18px;
+            font-style: italic;
+        }
+
+        /* 列表信息提示 */
+        .list-info-tip {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            display: inline-block;
+            border-left: 4px solid #1a2980;
+            font-weight: 500;
         }
 
         /* 返回按钮 */
         .back-btn {
             display: inline-block;
             margin-top: 20px;
-            padding: 10px 25px;
+            padding: 12px 30px;
             background-color: #1a2980;
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
             transition: all 0.3s ease;
+            font-size: 16px;
+            border: 2px solid #1a2980;
         }
 
         .back-btn:hover {
             background-color: #152066;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 41, 128, 0.3);
         }
 
         /* 密码管理区域 */
@@ -592,43 +723,151 @@
             font-size: 14px;
             color: #27ae60;
             margin-left: 10px;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         /* 响应式适配 */
+        @media (max-width: 1024px) {
+            .admin-container {
+                padding: 30px;
+            }
+            
+            .win-list-wrapper {
+                max-height: 500px;
+            }
+            
+            .content-cell {
+                max-width: 250px;
+                padding: 10px 15px !important;
+                font-size: 15px;
+            }
+            
+            .time-cell {
+                width: 150px;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
             .admin-container {
                 padding: 20px;
             }
+            
             .admin-title {
                 font-size: 24px;
             }
+            
             .win-list-table th,
             .win-list-table td {
-                padding: 8px 5px;
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+            
+            .win-list-wrapper {
+                max-height: 400px;
+            }
+            
+            .content-cell {
+                max-width: 150px;
+                padding: 8px 10px !important;
                 font-size: 14px;
             }
+            
+            .time-cell {
+                width: 120px;
+                font-size: 12px;
+            }
+            
+            .serial-cell,
+            .round-cell,
+            .type-cell {
+                width: auto;
+                font-size: 12px;
+            }
+            
+            .action-cell {
+                width: 90px;
+            }
+            
+            .oper-btn {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            
             .btn {
                 padding: 8px 15px;
                 font-size: 14px;
+                margin: 3px;
             }
+            
             .password-box {
                 padding: 20px;
             }
+            
             .preset-input-area {
                 flex-direction: column;
             }
+            
             .preset-textarea {
                 min-width: 100%;
             }
+            
             .preset-input {
                 width: 100%;
             }
+            
             .preset-password-section {
                 flex-direction: column;
                 align-items: flex-start;
             }
+            
             .preset-password-input {
                 width: 100%;
+            }
+            
+            .filter-area {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .filter-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .win-list-wrapper {
+                max-height: 350px;
+            }
+            
+            .win-list-table {
+                font-size: 12px;
+            }
+            
+            .content-cell {
+                max-width: 120px;
+                font-size: 13px;
+            }
+            
+            .time-cell {
+                width: 100px;
+                font-size: 11px;
+            }
+            
+            .list-info-tip {
+                font-size: 12px;
+                padding: 6px 10px;
             }
         }
     </style>
@@ -757,11 +996,11 @@
         </div>
 
         <!-- 中奖名单管理 -->
-        <div class="function-section">
+        <div class="function-section win-list-container">
             <h3 class="section-title">中奖名单管理</h3>
             <div class="section-content">
                 <!-- 功能按钮区域 -->
-                <div class="btn-group" style="margin-bottom: 20px;">
+                <div class="btn-group" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px;">
                     <button class="btn btn-danger" id="clearAllBtn">清空所有中奖记录</button>
                     <button class="btn btn-info" id="clearRoundBtn">清空指定轮数记录</button>
                     <button class="btn btn-success" id="downloadAllBtn">下载全部中奖名单</button>
@@ -774,19 +1013,20 @@
                     <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
                     <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
                     <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
+                    <span class="list-info-tip" id="listInfoTip">共 0 条记录</span>
                 </div>
 
-                <!-- 中奖名单表格 -->
-                <div style="overflow-x: auto;">
+                <!-- 中奖名单表格容器 -->
+                <div class="win-list-wrapper">
                     <table class="win-list-table" id="winListTable">
                         <thead>
                             <tr>
-                                <th>序号</th>
-                                <th>抽奖轮数</th>
-                                <th>抽奖类型</th>
-                                <th>中奖内容</th>
-                                <th>中奖时间</th>
-                                <th>操作</th>
+                                <th class="serial-cell">序号</th>
+                                <th class="round-cell">抽奖轮数</th>
+                                <th class="type-cell">抽奖类型</th>
+                                <th class="content-cell">中奖内容</th>
+                                <th class="time-cell">中奖时间</th>
+                                <th class="action-cell">操作</th>
                             </tr>
                         </thead>
                         <tbody id="winListTbody">
@@ -848,6 +1088,8 @@
         const filterRoundBtn = document.getElementById('filterRoundBtn');
         const clearFilterBtn = document.getElementById('clearFilterBtn');
         const winListTbody = document.getElementById('winListTbody');
+        const winListWrapper = document.querySelector('.win-list-wrapper');
+        const listInfoTip = document.getElementById('listInfoTip');
 
         // 新增：预设中奖功能元素
         const presetSection = document.getElementById('presetSection');
@@ -910,6 +1152,9 @@
             
             // 初始化预设密码状态
             updatePresetPasswordStatus();
+            
+            // 初始化列表信息
+            updateListInfoTip();
         });
 
         // ====================== 可折叠区域初始化 ======================
@@ -1237,6 +1482,7 @@
                 updateRoundDisplay();
                 updatePasswordDisplay();
                 renderWinList();
+                updateListInfoTip();
                 
                 // 启动实时更新
                 startRealtimeUpdate();
@@ -1283,6 +1529,7 @@
                 }
                 
                 renderWinList();
+                updateListInfoTip();
             }
         }
 
@@ -1435,6 +1682,7 @@
                 presetPasswordStatus.style.color = '#e74c3c';
                 presetAuthenticated = false;
                 renderWinList();
+                updateListInfoTip();
                 
                 alert('所有系统数据已清空！系统已恢复初始状态。');
             }
@@ -1533,6 +1781,7 @@
                         presetPasswordStatus.textContent = '(未验证)';
                         presetPasswordStatus.style.color = '#e74c3c';
                         renderWinList();
+                        updateListInfoTip();
                         
                         alert('🎉 数据恢复成功！\n- 轮数已恢复为：' + currentRound + '\n- 中奖记录恢复：' + winList.length + '条\n- 预设功能：' + (presetEnabled ? '已开启' : '已关闭'));
                     }
@@ -1566,17 +1815,31 @@
             loadPresetData();
             renderWinList();
             updatePasswordDisplay();
+            updateListInfoTip();
             
             alert('系统数据已刷新！');
         }
 
         // ====================== 中奖名单管理 ======================
-        // 渲染中奖名单表格（修复：按轮数从小到大显示）
+        // 更新列表信息提示
+        function updateListInfoTip() {
+            const totalCount = winList.length;
+            const filteredCount = filteredWinList.length;
+            
+            if (filterRoundInput.value && parseInt(filterRoundInput.value) >= 1) {
+                listInfoTip.textContent = `筛选结果：${filteredCount} 条记录（共 ${totalCount} 条）`;
+            } else {
+                listInfoTip.textContent = `共 ${totalCount} 条记录`;
+            }
+        }
+
+        // 渲染中奖名单表格（优化内容显示）
         function renderWinList() {
             winListTbody.innerHTML = '';
             
             if (filteredWinList.length === 0) {
                 winListTbody.innerHTML = '<tr><td colspan="6" class="empty-tip">暂无中奖记录</td></tr>';
+                updateListInfoTip();
                 return;
             }
 
@@ -1592,13 +1855,17 @@
             // 显示排序后的列表，序号从1开始
             sortedList.forEach((item, index) => {
                 const tr = document.createElement('tr');
+                
+                // 判断内容长度，为长内容添加特殊类
+                const contentClass = item.content.length > 15 ? 'content-cell long-content' : 'content-cell';
+                
                 tr.innerHTML = `
-                    <td>${index + 1}</td>
+                    <td class="serial-cell">${index + 1}</td>
                     <td class="round-cell">${item.round}轮</td>
                     <td class="type-cell">${item.type}</td>
-                    <td>${item.content}</td>
-                    <td>${item.time}</td>
-                    <td>
+                    <td class="${contentClass}" title="${item.content}">${item.content}</td>
+                    <td class="time-cell">${item.time}</td>
+                    <td class="action-cell">
                         <button class="oper-btn delete-btn" data-index="${findItemIndexInWinList(item)}">删除</button>
                     </td>
                 `;
@@ -1612,6 +1879,8 @@
                     deleteWinItem(realIndex);
                 });
             });
+            
+            updateListInfoTip();
         }
 
         // 在原始winList中查找项目的索引
@@ -1635,6 +1904,7 @@
                 localStorage.setItem('lotteryWinList', JSON.stringify(winList));
                 filteredWinList = [...winList];
                 renderWinList();
+                updateListInfoTip();
                 alert('记录已删除');
             }
         }
@@ -1646,6 +1916,7 @@
                 winList = [];
                 filteredWinList = [];
                 renderWinList();
+                updateListInfoTip();
                 alert('所有中奖记录已清空');
             }
         }
@@ -1666,11 +1937,12 @@
                 localStorage.setItem('lotteryWinList', JSON.stringify(winList));
                 filteredWinList = [...winList];
                 renderWinList();
+                updateListInfoTip();
                 alert(`第 ${roundNum} 轮的中奖记录已清空`);
             }
         }
 
-        // 下载全部中奖名单（修复：按轮数从小到大排序）
+        // 下载全部中奖名单
         function downloadAllWinRecords() {
             if (winList.length === 0) {
                 alert('暂无中奖记录，无法下载！');
@@ -1712,6 +1984,7 @@
             winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
             filteredWinList = [...winList];
             renderWinList();
+            updateListInfoTip();
             // 无感知刷新，不弹窗
         }
 
@@ -1725,6 +1998,7 @@
             
             filteredWinList = winList.filter(item => item.round === round);
             renderWinList();
+            updateListInfoTip();
             alert(`已筛选出第 ${round} 轮的中奖记录，共 ${filteredWinList.length} 条`);
         }
 
@@ -1733,6 +2007,7 @@
             filterRoundInput.value = '';
             filteredWinList = [...winList];
             renderWinList();
+            updateListInfoTip();
             alert('筛选条件已清空，显示全部记录');
         }
 
