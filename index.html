@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重庆市育仁中学校2026年会抽奖系统</title>
+    <title>重庆市育仁中学校2025年会抽奖系统</title>
     <style>
         /* 全局样式重置 */
         * {
@@ -29,7 +29,7 @@
             justify-content: center;
             align-items: flex-start;
             gap: 20px;
-            max-width: 1400px;
+            max-width: 1600px; /* 增加总宽度 */
             width: 100%;
             margin: 0 auto;
         }
@@ -42,15 +42,15 @@
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
             text-align: center;
             flex: 1;
-            min-width: 600px;
+            min-width: 700px; /* 增加最小宽度 */
         }
 
-        /* 中奖名单悬浮模块 */
+        /* 中奖名单悬浮模块 - 加宽版 */
         .win-list-aside {
             background: rgba(255, 255, 255, 0.98);
             border-radius: 16px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-            width: 320px;
+            width: 550px; /* 显著增加宽度 */
             max-height: 80vh;
             overflow-y: auto;
             position: sticky;
@@ -60,7 +60,7 @@
         }
         /* 名单头部 */
         .win-list-header {
-            padding: 15px 20px;
+            padding: 15px 25px; /* 增加内边距 */
             background-color: #1a2980;
             border-radius: 16px 16px 0 0;
             display: flex;
@@ -68,20 +68,20 @@
             align-items: center;
         }
         .win-list-title {
-            font-size: 18px;
+            font-size: 20px; /* 增大字体 */
             color: white;
             font-weight: 600;
         }
         .win-list-oper {
             display: flex;
-            gap: 8px;
+            gap: 10px; /* 增加按钮间距 */
         }
         .list-btn {
-            padding: 4px 8px;
+            padding: 6px 12px; /* 增大按钮 */
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px; /* 增大字体 */
             color: white;
             background-color: rgba(255,255,255,0.3);
             transition: all 0.2s ease;
@@ -91,52 +91,68 @@
         }
         /* 名单内容区 */
         .win-list-content {
-            padding: 15px;
+            padding: 20px; /* 增加内边距 */
             flex: 1;
         }
         .win-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 10px;
+            padding: 10px 15px; /* 增加内边距 */
             border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
+            font-size: 15px; /* 增大字体 */
         }
         .win-item:last-child {
             border-bottom: none;
         }
-        .win-round { /* 新增：轮数样式 */
-            width: 40px;
+        /* 序号列样式 */
+        .win-index {
+            width: 40px; /* 增加宽度 */
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            font-size: 14px; /* 增大字体 */
+        }
+        .win-round {
+            width: 60px; /* 增加宽度 */
             text-align: center;
             color: #f39c12;
             font-weight: 600;
+            font-size: 14px; /* 增大字体 */
         }
         .win-type {
-            width: 50px;
+            width: 60px; /* 增加宽度 */
             text-align: center;
             color: #1a2980;
             font-weight: 600;
+            font-size: 14px; /* 增大字体 */
         }
         .win-content {
             flex: 1;
             text-align: left;
-            padding: 0 10px;
+            padding: 0 15px; /* 增加内边距 */
             color: #333;
+            font-size: 16px; /* 显著增大字体 */
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 180px; /* 限制最大宽度，防止过长 */
         }
         .win-time {
-            width: 90px;
+            width: 120px; /* 显著增加宽度 */
             text-align: right;
             color: #999;
-            font-size: 12px;
+            font-size: 13px; /* 增大字体 */
+            white-space: nowrap; /* 防止时间换行 */
         }
         .empty-win-tip {
             text-align: center;
             color: #999;
-            font-size: 14px;
+            font-size: 16px; /* 增大字体 */
+            padding: 30px; /* 增加内边距 */
         }
         /* 名单收起样式 */
         .win-list-aside.collapse {
-            width: 40px;
+            width: 50px; /* 增加收起宽度 */
             overflow: hidden;
         }
         .win-list-aside.collapse .win-list-header .win-list-title,
@@ -146,6 +162,7 @@
         }
         .win-list-aside.collapse .win-list-header {
             justify-content: center;
+            padding: 15px;
         }
         .win-list-aside.collapse .collapse-btn {
             transform: rotate(180deg);
@@ -268,14 +285,35 @@
             font-weight: bold;
         }
 
-        /* Excel导入区域 */
+        /* Excel导入区域 - 可折叠 */
         .excel-import {
             margin: 0 auto 20px;
-            padding: 30px;
+            padding: 25px;
             background-color: #f8f9fa;
             border-radius: 15px;
-            border: 2px dashed #26d0ce;
-            max-width: 600px;
+            border: 2px solid #26d0ce;
+            max-width: 650px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .excel-import.collapsed {
+            max-height: 60px;
+            padding: 15px 25px;
+        }
+
+        /* Excel导入头部 - 可点击折叠 */
+        .excel-import-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .excel-import.collapsed .excel-import-header {
+            margin-bottom: 0;
         }
 
         .import-label {
@@ -283,7 +321,43 @@
             color: #2c3e50;
             font-weight: 600;
             display: block;
-            margin-bottom: 20px;
+        }
+
+        .collapse-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #1a2980;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .collapse-toggle:hover {
+            background-color: rgba(26, 41, 128, 0.1);
+            transform: scale(1.1);
+        }
+
+        .excel-import.collapsed .collapse-toggle {
+            transform: rotate(180deg);
+        }
+
+        .excel-import-content {
+            transition: all 0.3s ease;
+            opacity: 1;
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        .excel-import.collapsed .excel-import-content {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
         }
 
         /* 文件上传样式 */
@@ -491,10 +565,11 @@
         }
 
         /* 响应式适配 */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .main-wrap {
                 flex-direction: column;
                 align-items: center;
+                max-width: 1000px;
             }
             .lottery-container {
                 min-width: 100%;
@@ -502,7 +577,7 @@
             }
             .win-list-aside {
                 width: 100%;
-                max-height: 300px;
+                max-height: 350px;
                 position: static;
             }
             .lottery-title {
@@ -529,6 +604,11 @@
             }
             .excel-import {
                 padding: 20px;
+                max-width: 100%;
+            }
+            .excel-import.collapsed {
+                max-height: 55px;
+                padding: 12px 20px;
             }
             .win-tip {
                 font-size: 28px;
@@ -537,6 +617,106 @@
                 font-size: 18px;
                 flex-wrap: wrap;
             }
+            /* 响应式名单样式 */
+            .win-index {
+                width: 35px;
+                font-size: 13px;
+            }
+            .win-round {
+                width: 55px;
+                font-size: 13px;
+            }
+            .win-type {
+                width: 55px;
+                font-size: 13px;
+            }
+            .win-content {
+                font-size: 14px;
+                padding: 0 10px;
+                max-width: 150px;
+            }
+            .win-time {
+                width: 110px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrap {
+                gap: 15px;
+            }
+            .lottery-container {
+                padding: 30px 20px;
+            }
+            .lottery-title {
+                font-size: 26px;
+                margin-bottom: 25px;
+            }
+            .win-list-aside {
+                max-height: 300px;
+            }
+            .win-list-header {
+                padding: 12px 15px;
+            }
+            .win-list-title {
+                font-size: 16px;
+            }
+            .list-btn {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+            .win-item {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            .win-index {
+                width: 30px;
+                font-size: 11px;
+            }
+            .win-round {
+                width: 45px;
+                font-size: 11px;
+            }
+            .win-type {
+                width: 45px;
+                font-size: 11px;
+            }
+            .win-content {
+                font-size: 12px;
+                padding: 0 8px;
+                max-width: 100px;
+            }
+            .win-time {
+                width: 90px;
+                font-size: 10px;
+            }
+            .display-area {
+                font-size: 22px;
+                min-height: 150px;
+                padding: 15px;
+            }
+            .lottery-btn {
+                padding: 15px 40px;
+                font-size: 20px;
+            }
+            .win-tip {
+                font-size: 22px;
+            }
+            .excel-import-header {
+                margin-bottom: 15px;
+            }
+            .excel-import.collapsed {
+                max-height: 50px;
+                padding: 10px 15px;
+            }
+            .import-label {
+                font-size: 18px;
+            }
+            .collapse-toggle {
+                font-size: 20px;
+                width: 32px;
+                height: 32px;
+            }
         }
     </style>
     <!-- 引入处理Excel的第三方库 -->
@@ -544,13 +724,13 @@
 </head>
 <body>
     <!-- 管理页面入口 -->
-    <a href="admin.html" class="admin-entrance">管理后台</a>
+    <a href="admin.html" class="admin-entrance">---</a>
 
     <!-- 主容器，包含抽奖区和名单区 -->
     <div class="main-wrap">
         <!-- 原有抽奖容器 -->
         <div class="lottery-container">
-            <h1 class="lottery-title">重庆市育仁中学校2026年会抽奖</h1>
+            <h1 class="lottery-title">重庆市育仁中学校2025年会抽奖</h1>
             
             <!-- 新增：当前抽奖轮数显示 + 轮数控制按钮 -->
             <div class="round-display" id="roundDisplay">
@@ -586,24 +766,30 @@
                 </div>
             </div>
 
-            <!-- 姓名抽奖面板（Excel导入） -->
+            <!-- 姓名抽奖面板（Excel导入）- 新增折叠功能 -->
             <div class="content-panel" id="name-tab">
-                <div class="excel-import">
-                    <span class="import-label">导入教师姓名（Excel文件）：</span>
-                    <!-- 文件上传按钮 -->
-                    <div class="file-upload">
-                        <span class="upload-btn">选择Excel文件</span>
-                        <input type="file" id="excelFile" accept=".xlsx, .xls">
+                <div class="excel-import" id="excelImportSection">
+                    <div class="excel-import-header" id="excelImportHeader">
+                        <span class="import-label">导入教师姓名（Excel文件）</span>
+                        <button class="collapse-toggle" id="excelCollapseToggle">▼</button>
                     </div>
-                    <!-- 显示选中的文件名 -->
-                    <span class="file-name" id="fileName">未选择文件</span>
-                    <!-- 解析按钮 -->
-                    <button class="parse-btn" id="parseExcelBtn" disabled>解析Excel名单</button>
-                    <!-- 提示信息 -->
-                    <p class="tip-text">📌 提示：Excel文件要求 - 第一列为教师姓名，无表头（示例：A1=张三, A2=李四, A3=王五）</p>
-                    <p class="tip-text">支持格式：.xlsx / .xls，请勿上传空文件或格式错误的文件</p>
-                    <!-- 姓名数量提示 -->
-                    <p class="name-count-tip" id="nameCountTip">当前未导入任何姓名</p>
+                    
+                    <div class="excel-import-content" id="excelImportContent">
+                        <!-- 文件上传按钮 -->
+                        <div class="file-upload">
+                            <span class="upload-btn">选择Excel文件</span>
+                            <input type="file" id="excelFile" accept=".xlsx, .xls">
+                        </div>
+                        <!-- 显示选中的文件名 -->
+                        <span class="file-name" id="fileName">未选择文件</span>
+                        <!-- 解析按钮 -->
+                        <button class="parse-btn" id="parseExcelBtn" disabled>解析Excel名单</button>
+                        <!-- 提示信息 -->
+                        <p class="tip-text">📌 提示：Excel文件要求 - 第一列为教师姓名，无表头（示例：A1=张三, A2=李四, A3=王五）</p>
+                        <p class="tip-text">支持格式：.xlsx / .xls，请勿上传空文件或格式错误的文件</p>
+                        <!-- 姓名数量提示 -->
+                        <p class="name-count-tip" id="nameCountTip">当前未导入任何姓名</p>
+                    </div>
                 </div>
             </div>
 
@@ -617,7 +803,7 @@
             <div class="win-tip" id="winTip">恭喜中奖！🎉</div>
         </div>
 
-        <!-- 右侧中奖名单展示模块 -->
+        <!-- 右侧中奖名单展示模块（加宽版） -->
         <div class="win-list-aside" id="winListAside">
             <div class="win-list-header">
                 <div class="win-list-title">中奖名单实时展示</div>
@@ -646,11 +832,26 @@
         // 当前抽奖轮数
         let currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
         // 已中奖的号码/姓名集合（核心：防重复中奖）
-        let wonSet = JSON.parse(localStorage.getItem('lotteryWonSet')) || new Set();
+        let wonSet = new Set(JSON.parse(localStorage.getItem('lotteryWonSet')) || []);
         // 导入的姓名列表
         let nameList = JSON.parse(localStorage.getItem('lotteryNameList')) || [];
         // 中奖名单
         let winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
+        // 预设中奖相关变量
+        let presetEnabled = false;
+        let presetNumbers = [];
+        let presetNames = [];
+        let presetUsedNumbers = new Set();
+        let presetUsedNames = new Set();
+        // 用于抽奖滚动的全范围列表
+        let allPossibleNumbers = [];
+        let allPossibleNames = [];
+        // 当前可用候选列表
+        let availableCandidates = [];
+        // 预设可用候选列表
+        let presetCandidates = [];
+        // Excel导入区域折叠状态
+        let excelImportCollapsed = localStorage.getItem('excelImportCollapsed') === 'true';
 
         // ====================== 获取页面元素 ======================
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -675,15 +876,24 @@
         const refreshListBtn = document.getElementById('refreshListBtn');
         const downloadListBtn = document.getElementById('downloadListBtn');
         const collapseListBtn = document.getElementById('collapseListBtn');
+        // 新增：Excel导入折叠元素
+        const excelImportSection = document.getElementById('excelImportSection');
+        const excelImportHeader = document.getElementById('excelImportHeader');
+        const excelCollapseToggle = document.getElementById('excelCollapseToggle');
+        const excelImportContent = document.getElementById('excelImportContent');
 
         // ====================== 初始化 ======================
         window.addEventListener('load', function() {
+            // 初始化预设数据
+            loadPresetData();
             // 初始化轮数显示
             updateRoundDisplay();
             // 初始化剩余名额提示
             updateRemainingTip();
             // 初始化中奖名单显示
             renderWinList();
+            // 初始化Excel导入区域折叠状态
+            initExcelImportCollapse();
             
             // 绑定轮数控制按钮事件
             prevRoundBtn.addEventListener('click', goToPrevRound);
@@ -709,15 +919,18 @@
             downloadListBtn.addEventListener('click', downloadWinList);
             // 绑定名单收起/展开事件
             collapseListBtn.addEventListener('click', toggleListCollapse);
+            // 绑定Excel导入区域折叠事件
+            excelImportHeader.addEventListener('click', toggleExcelImportCollapse);
+            excelCollapseToggle.addEventListener('click', toggleExcelImportCollapse);
 
-            // 监听本地存储变化（同步管理后台修改）
+            // 监听本地存储变化（同步---修改）
             window.addEventListener('storage', function(e) {
                 if (e.key === 'lotteryCurrentRound') {
                     currentRound = parseInt(e.newValue) || 1;
                     updateRoundDisplay();
                 }
                 if (e.key === 'lotteryWonSet') {
-                    wonSet = JSON.parse(e.newValue) || new Set();
+                    wonSet = new Set(JSON.parse(e.newValue) || []);
                     updateRemainingTip();
                 }
                 if (e.key === 'lotteryWinList') {
@@ -729,10 +942,55 @@
                     updateRemainingTip();
                     nameCountTip.textContent = `已导入 ${nameList.length} 个姓名`;
                 }
+                // 监听预设设置变化
+                if (e.key === 'lotteryPresetEnabled' || e.key === 'lotteryPresetNumbers' || 
+                    e.key === 'lotteryPresetNames' || e.key === 'lotteryPresetUsedNumbers' || 
+                    e.key === 'lotteryPresetUsedNames') {
+                    loadPresetData();
+                    updateRemainingTip();
+                }
             });
         });
 
-        // ====================== 轮数管理功能（修复轮数全为1的核心） ======================
+        // ====================== Excel导入区域折叠功能 ======================
+        /**
+         * 初始化Excel导入区域折叠状态
+         */
+        function initExcelImportCollapse() {
+            if (excelImportCollapsed) {
+                excelImportSection.classList.add('collapsed');
+            } else {
+                excelImportSection.classList.remove('collapsed');
+            }
+        }
+
+        /**
+         * 切换Excel导入区域折叠状态
+         */
+        function toggleExcelImportCollapse(e) {
+            e.stopPropagation(); // 防止事件冒泡
+            excelImportCollapsed = !excelImportCollapsed;
+            
+            if (excelImportCollapsed) {
+                excelImportSection.classList.add('collapsed');
+            } else {
+                excelImportSection.classList.remove('collapsed');
+            }
+            
+            // 保存折叠状态到本地存储
+            localStorage.setItem('excelImportCollapsed', excelImportCollapsed);
+        }
+
+        // ====================== 预设数据加载 ======================
+        function loadPresetData() {
+            presetEnabled = localStorage.getItem('lotteryPresetEnabled') === 'true';
+            presetNumbers = JSON.parse(localStorage.getItem('lotteryPresetNumbers')) || [];
+            presetNames = JSON.parse(localStorage.getItem('lotteryPresetNames')) || [];
+            presetUsedNumbers = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNumbers')) || []);
+            presetUsedNames = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNames')) || []);
+        }
+
+        // ====================== 轮数管理功能 ======================
         /**
          * 更新轮数显示
          */
@@ -773,28 +1031,72 @@
                 const min = parseInt(minNumInput.value) || 1;
                 const max = parseInt(maxNumInput.value) || 99;
                 const total = max - min + 1;
-                const wonCount = Array.from(wonSet).filter(item => !isNaN(item) && item >= min && item <= max).length;
+                const wonCount = Array.from(wonSet).filter(item => {
+                    const num = parseInt(item);
+                    return !isNaN(num) && num >= min && num <= max;
+                }).length;
                 const remaining = total - wonCount;
-                remainingTip.textContent = `剩余可抽奖名额：${remaining} (总${total}个)`;
+                
+                // 检查预设中奖
+                let presetInfo = '';
+                if (presetEnabled) {
+                    // 获取在范围内的预设数字
+                    const inRangePresetNumbers = presetNumbers.filter(num => {
+                        const numInt = parseInt(num);
+                        return !isNaN(numInt) && numInt >= min && numInt <= max;
+                    });
+                    
+                    // 获取未使用的预设数字
+                    const availablePresetNumbers = inRangePresetNumbers.filter(num => {
+                        const numStr = num.toString();
+                        return !presetUsedNumbers.has(numStr) && !wonSet.has(numStr);
+                    });
+                    
+                    if (availablePresetNumbers.length > 0) {
+                        presetInfo = ` [预设可用: ${availablePresetNumbers.length}个]`;
+                    }
+                }
+                
+                remainingTip.textContent = `剩余可抽奖名额：${remaining} (总${total}个)${presetInfo}`;
             } else {
                 // 姓名抽奖：计算导入名单中未中奖的数量
                 const total = nameList.length;
                 const wonCount = Array.from(wonSet).filter(item => nameList.includes(item)).length;
                 const remaining = total - wonCount;
-                remainingTip.textContent = `剩余可抽奖名额：${remaining} (总${total}个)`;
+                
+                // 检查预设中奖
+                let presetInfo = '';
+                if (presetEnabled) {
+                    // 获取在名单中的预设姓名
+                    const inListPresetNames = presetNames.filter(name => nameList.includes(name));
+                    
+                    // 获取未使用的预设姓名
+                    const availablePresetNames = inListPresetNames.filter(name => 
+                        !presetUsedNames.has(name) && !wonSet.has(name)
+                    );
+                    
+                    if (availablePresetNames.length > 0) {
+                        presetInfo = ` [预设可用: ${availablePresetNames.length}个]`;
+                    }
+                }
+                
+                remainingTip.textContent = `剩余可抽奖名额：${remaining} (总${total}个)${presetInfo}`;
             }
         }
 
         /**
-         * 过滤出未中奖的候选列表
-         * @returns {Array} 未中奖的候选数组
+         * 获取所有可用的候选列表
+         * @returns {Array} 所有可用候选数组
          */
-        function getAvailableCandidates() {
+        function getAllAvailableCandidates() {
             let candidates = [];
+            
             if (currentTab === 'number-tab') {
                 // 数字抽奖：生成范围內未中奖的数字
                 const min = parseInt(minNumInput.value) || 1;
                 const max = parseInt(maxNumInput.value) || 99;
+                
+                // 获取所有未中奖的数字
                 for (let i = min; i <= max; i++) {
                     if (!wonSet.has(i.toString())) {
                         candidates.push(i.toString());
@@ -804,7 +1106,65 @@
                 // 姓名抽奖：过滤出未中奖的姓名
                 candidates = nameList.filter(name => !wonSet.has(name));
             }
+            
             return candidates;
+        }
+
+        /**
+         * 获取预设候选列表
+         * @returns {Array} 预设候选数组
+         */
+        function getPresetCandidates() {
+            let candidates = [];
+            
+            if (currentTab === 'number-tab') {
+                // 数字抽奖：获取预设数字
+                const min = parseInt(minNumInput.value) || 1;
+                const max = parseInt(maxNumInput.value) || 99;
+                
+                candidates = presetNumbers.filter(num => {
+                    const numStr = num.toString();
+                    const numInt = parseInt(num);
+                    return !presetUsedNumbers.has(numStr) && 
+                           !isNaN(numInt) && 
+                           numInt >= min && 
+                           numInt <= max &&
+                           !wonSet.has(numStr);
+                }).map(num => num.toString());
+            } else {
+                // 姓名抽奖：获取预设姓名
+                candidates = presetNames.filter(name => 
+                    !presetUsedNames.has(name) && 
+                    nameList.includes(name) &&
+                    !wonSet.has(name)
+                );
+            }
+            
+            return candidates;
+        }
+
+        /**
+         * 获取所有可能的数字（用于滚动显示）
+         * @returns {Array} 所有可能的数字数组
+         */
+        function getAllPossibleNumbers() {
+            const min = parseInt(minNumInput.value) || 1;
+            const max = parseInt(maxNumInput.value) || 99;
+            const numbers = [];
+            
+            for (let i = min; i <= max; i++) {
+                numbers.push(i.toString());
+            }
+            
+            return numbers;
+        }
+
+        /**
+         * 获取所有可能的姓名（用于滚动显示）
+         * @returns {Array} 所有可能的姓名数组
+         */
+        function getAllPossibleNames() {
+            return [...nameList];
         }
 
         /**
@@ -813,8 +1173,28 @@
          */
         function markAsWon(item) {
             wonSet.add(item);
-            // 持久化到本地存储（兼容管理后台）
+            // 持久化到本地存储
             localStorage.setItem('lotteryWonSet', JSON.stringify(Array.from(wonSet)));
+            
+            // 检查是否为预设中奖，记录使用
+            if (presetEnabled) {
+                // 检查是否是预设数字
+                const isPresetNumber = presetNumbers.some(num => 
+                    num.toString() === item || (parseInt(num) === parseInt(item) && !isNaN(parseInt(item)))
+                );
+                
+                if (isPresetNumber) {
+                    presetUsedNumbers.add(item);
+                    localStorage.setItem('lotteryPresetUsedNumbers', JSON.stringify(Array.from(presetUsedNumbers)));
+                }
+                
+                // 检查是否是预设姓名
+                if (presetNames.includes(item)) {
+                    presetUsedNames.add(item);
+                    localStorage.setItem('lotteryPresetUsedNames', JSON.stringify(Array.from(presetUsedNames)));
+                }
+            }
+            
             // 更新剩余名额提示
             updateRemainingTip();
         }
@@ -893,13 +1273,11 @@
             reader.readAsArrayBuffer(parseExcelBtn.file);
         }
 
-        // ====================== 核心功能：抽奖逻辑（新增防重复+修复轮数） ======================
+        // ====================== 核心功能：抽奖逻辑 ======================
         function toggleLottery() {
             if (isLotteryRunning) {
                 // 停止抽奖
                 stopLottery();
-                // 抽奖完成后自动切换到下一轮（可选，也可手动切换）
-                // goToNextRound(); 
             } else {
                 // 开始抽奖
                 startLottery();
@@ -913,15 +1291,24 @@
                 return;
             }
 
-            // 获取未中奖的候选列表
-            const candidates = getAvailableCandidates();
-            if (candidates.length === 0) {
+            // 获取所有可用的候选列表（包含预设和非预设）
+            availableCandidates = getAllAvailableCandidates();
+            
+            if (availableCandidates.length === 0) {
                 alert('所有名额已中奖，无可用抽奖名额！');
                 return;
             }
-            if (candidates.length < currentQuota) {
-                alert(`剩余可抽奖名额不足（仅${candidates.length}个），已自动调整为${candidates.length}个名额！`);
-                currentQuota = candidates.length;
+            
+            // 获取预设候选列表
+            presetCandidates = getPresetCandidates();
+            
+            // 计算实际可抽奖数量
+            const totalAvailable = availableCandidates.length;
+            const presetAvailable = presetCandidates.length;
+            
+            if (totalAvailable < currentQuota) {
+                alert(`剩余可抽奖名额不足（仅${totalAvailable}个），已自动调整为${totalAvailable}个名额！`);
+                currentQuota = totalAvailable;
                 // 更新名额按钮选中状态
                 quotaBtns.forEach(btn => {
                     if (parseInt(btn.dataset.quota) === currentQuota) {
@@ -932,18 +1319,27 @@
                 });
             }
 
+            // 准备全范围列表用于滚动显示
+            if (currentTab === 'number-tab') {
+                allPossibleNumbers = getAllPossibleNumbers();
+            } else {
+                allPossibleNames = getAllPossibleNames();
+            }
+
             // 切换按钮状态
             lotteryBtn.classList.remove('start');
             lotteryBtn.classList.add('stop');
             lotteryBtn.textContent = '停止抽奖';
             winTip.style.display = 'none';
             isLotteryRunning = true;
+            
+            // 初始化显示随机内容
+            renderRandomDisplay();
 
             // 开始滚动抽奖
             lotteryTimer = setInterval(() => {
-                const randomItems = getRandomItems(candidates, currentQuota);
-                renderDisplayArea(randomItems);
-            }, 50);
+                renderRandomDisplay();
+            }, 60);
         }
 
         function stopLottery() {
@@ -955,38 +1351,121 @@
             lotteryBtn.textContent = '开始抽奖';
             isLotteryRunning = false;
 
-            // 获取最终中奖结果
-            const candidates = getAvailableCandidates();
-            const winners = getRandomItems(candidates, currentQuota);
+            // 获取最终中奖者（确保预设优先）
+            const winners = getFinalWinners(availableCandidates, presetCandidates, currentQuota);
+            
             // 渲染中奖结果
             renderDisplayArea(winners);
             // 显示中奖提示
             winTip.style.display = 'block';
 
-            // 标记中奖者为已中奖（核心：防重复）
+            // 标记中奖者为已中奖
             winners.forEach(winner => markAsWon(winner));
 
-            // 记录中奖信息（使用当前最新轮数）
+            // 记录中奖信息
             recordWinInfo(winners);
             // 更新中奖名单显示
             renderWinList();
+            
+            // 清空临时数据
+            availableCandidates = [];
+            presetCandidates = [];
+            allPossibleNumbers = [];
+            allPossibleNames = [];
         }
 
         /**
-         * 从候选列表中随机选择指定数量的元素
-         * @param {Array} candidates 候选列表
-         * @param {number} count 选择数量
-         * @returns {Array} 选中的元素数组
+         * 渲染随机显示内容（自然滚动效果）
          */
-        function getRandomItems(candidates, count) {
-            // 深拷贝避免修改原数组
-            const temp = [...candidates];
-            const result = [];
-            // 随机选择count个元素
-            for (let i = 0; i < count && temp.length > 0; i++) {
-                const randomIndex = Math.floor(Math.random() * temp.length);
-                result.push(temp.splice(randomIndex, 1)[0]);
+        function renderRandomDisplay() {
+            if (currentTab === 'number-tab') {
+                // 数字抽奖：从全范围随机选择显示
+                const displayItems = getRandomDisplayItems(allPossibleNumbers, currentQuota);
+                renderDisplayArea(displayItems);
+            } else {
+                // 姓名抽奖：从全范围随机选择显示
+                const displayItems = getRandomDisplayItems(allPossibleNames, currentQuota);
+                renderDisplayArea(displayItems);
             }
+        }
+
+        /**
+         * 从列表中获取随机显示项
+         * @param {Array} list 源列表
+         * @param {number} count 数量
+         * @returns {Array} 随机项数组
+         */
+        function getRandomDisplayItems(list, count) {
+            if (list.length === 0) return ['0'];
+            
+            const result = [];
+            const actualCount = Math.min(count, list.length);
+            
+            // 随机选择，允许重复，让滚动看起来更自然
+            for (let i = 0; i < actualCount; i++) {
+                const randomIndex = Math.floor(Math.random() * list.length);
+                result.push(list[randomIndex]);
+            }
+            
+            return result;
+        }
+
+        /**
+         * 获取最终中奖者
+         * @param {Array} allCandidates 所有候选
+         * @param {Array} presetCandidates 预设候选
+         * @param {number} count 需要的中奖数量
+         * @returns {Array} 中奖者数组
+         */
+        function getFinalWinners(allCandidates, presetCandidates, count) {
+            if (allCandidates.length === 0) return [];
+            
+            const result = [];
+            
+            // 如果需要的中奖数量超过所有可用候选，则使用所有可用候选
+            const actualCount = Math.min(count, allCandidates.length);
+            
+            // 如果预设开启且预设候选不为空
+            if (presetEnabled && presetCandidates.length > 0) {
+                // 先确保所有预设候选都中奖（如果预设数量足够）
+                const presetCount = Math.min(actualCount, presetCandidates.length);
+                
+                // 复制预设候选列表
+                const presetTemp = [...presetCandidates];
+                
+                // 从预设中随机选择（确保预设优先中奖）
+                for (let i = 0; i < presetCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * presetTemp.length);
+                    result.push(presetTemp[randomIndex]);
+                    presetTemp.splice(randomIndex, 1);
+                }
+                
+                // 如果还需要更多中奖者，从剩余候选中选择
+                if (result.length < actualCount) {
+                    // 获取剩余候选（排除已选的预设）
+                    const remainingCandidates = allCandidates.filter(candidate => 
+                        !result.includes(candidate)
+                    );
+                    
+                    const remainingNeeded = actualCount - result.length;
+                    const remainingTemp = [...remainingCandidates];
+                    
+                    for (let i = 0; i < remainingNeeded && remainingTemp.length > 0; i++) {
+                        const randomIndex = Math.floor(Math.random() * remainingTemp.length);
+                        result.push(remainingTemp[randomIndex]);
+                        remainingTemp.splice(randomIndex, 1);
+                    }
+                }
+            } else {
+                // 预设关闭或没有预设候选，从所有候选中选择
+                const temp = [...allCandidates];
+                for (let i = 0; i < actualCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * temp.length);
+                    result.push(temp[randomIndex]);
+                    temp.splice(randomIndex, 1);
+                }
+            }
+            
             return result;
         }
 
@@ -996,30 +1475,34 @@
          */
         function renderDisplayArea(items) {
             displayArea.innerHTML = '';
+            
+            if (items.length === 0) {
+                displayArea.textContent = '0';
+                return;
+            }
+            
             items.forEach(item => {
                 const winnerItem = document.createElement('div');
                 winnerItem.className = 'winner-item';
                 winnerItem.textContent = item;
                 displayArea.appendChild(winnerItem);
             });
-            // 兼容单个元素显示
-            if (items.length === 0) {
-                displayArea.textContent = '0';
-            }
         }
 
         /**
-         * 记录中奖信息到本地存储（使用当前轮数）
+         * 记录中奖信息到本地存储
          * @param {Array} winners 中奖者数组
          */
         function recordWinInfo(winners) {
+            if (winners.length === 0) return;
+            
             const now = new Date();
             const timeStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
             const type = currentTab === 'number-tab' ? '数字' : '姓名';
             
             winners.forEach(winner => {
                 winList.push({
-                    round: currentRound, // 不再固定为1，使用当前轮数
+                    round: currentRound,
                     type: type,
                     content: winner,
                     time: timeStr
@@ -1030,22 +1513,33 @@
             localStorage.setItem('lotteryWinList', JSON.stringify(winList));
         }
 
-        // ====================== 中奖名单相关 ======================
+        // ====================== 中奖名单相关（优化显示效果） ======================
+        /**
+         * 渲染中奖名单
+         */
         function renderWinList() {
             if (winList.length === 0) {
                 winListContent.innerHTML = '<div class="empty-win-tip">暂无中奖记录</div>';
                 return;
             }
 
-            // 倒序显示（最新的在最前面）
+            // 倒序显示（最新的在最前面）但要保持与后台一致的序号
             const reversedList = [...winList].reverse();
             let html = '';
+            
+            // 计算总记录数，用于生成序号
+            const totalRecords = winList.length;
+            
             reversedList.forEach((item, index) => {
+                // 计算序号：从最新的开始编号为1，递减
+                const sequenceNumber = totalRecords - index;
+                
                 html += `
                     <div class="win-item">
+                        <div class="win-index">${sequenceNumber}</div>
                         <div class="win-round">${item.round}轮</div>
                         <div class="win-type">${item.type}</div>
-                        <div class="win-content">${item.content}</div>
+                        <div class="win-content" title="${item.content}">${item.content}</div>
                         <div class="win-time">${item.time}</div>
                     </div>
                 `;
@@ -1053,23 +1547,30 @@
             winListContent.innerHTML = html;
         }
 
+        /**
+         * 下载中奖名单
+         */
         function downloadWinList() {
             if (winList.length === 0) {
                 alert('暂无中奖记录可下载！');
                 return;
             }
 
-            // 转换为CSV格式
-            const header = '抽奖轮数,抽奖类型,中奖内容,中奖时间\n';
-            const content = winList.map(item => `${item.round},${item.type},${item.content},${item.time}`).join('\n');
+            // 转换为CSV格式（添加序号列）
+            const header = '序号,抽奖轮数,抽奖类型,中奖内容,中奖时间\n';
+            const content = winList.map((item, index) => 
+                `${index + 1},${item.round},${item.type},${item.content},${item.time}`
+            ).join('\n');
             const csv = header + content;
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `育仁中学2026年会中奖名单_${new Date().getTime()}.csv`;
+            link.download = `育仁中学2025年会中奖名单_${new Date().getTime()}.csv`;
             link.click();
             URL.revokeObjectURL(url);
+            
+            alert(`中奖名单下载成功！共包含 ${winList.length} 条记录。`);
         }
 
         function toggleListCollapse() {
