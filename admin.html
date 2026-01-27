@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>育仁中学2026年会抽奖 - 管理后台</title>
+    <title>育仁中学2025年会抽奖 - 管理后台</title>
     <style>
         * {
             margin: 0;
@@ -226,6 +226,203 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .section-title:hover {
+            color: #152066;
+        }
+
+        .section-toggle {
+            font-size: 14px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .section-content {
+            transition: all 0.3s ease;
+            max-height: 1000px;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        /* 隐藏设置样式 */
+        .hidden-setting-section {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .hidden-setting-title {
+            font-size: 18px;
+            color: #f39c12;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hidden-setting-title::before {
+            content: "⚙️";
+        }
+
+        /* 预设密码保护区域 */
+        .preset-password-section {
+            background-color: #f0f7ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preset-password-label {
+            font-size: 16px;
+            color: #1a2980;
+            font-weight: 600;
+        }
+
+        .preset-password-input {
+            padding: 8px 15px;
+            font-size: 16px;
+            border: 2px solid #26d0ce;
+            border-radius: 6px;
+            width: 200px;
+            outline: none;
+        }
+
+        .preset-password-input:focus {
+            border-color: #1a2980;
+        }
+
+        .preset-access-control {
+            display: none;
+        }
+
+        .preset-access-control.expanded {
+            display: block;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #27ae60;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preset-input-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .preset-textarea {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #26d0ce;
+            border-radius: 8px;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .preset-textarea:focus {
+            border-color: #1a2980;
+        }
+
+        .preset-input {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 200px;
+            outline: none;
+        }
+
+        .preset-input:focus {
+            border-color: #26d0ce;
+        }
+
+        .preset-tip {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .preset-tip strong {
+            color: #e74c3c;
         }
 
         /* 筛选区域 */
@@ -417,6 +614,22 @@
             .password-box {
                 padding: 20px;
             }
+            .preset-input-area {
+                flex-direction: column;
+            }
+            .preset-textarea {
+                min-width: 100%;
+            }
+            .preset-input {
+                width: 100%;
+            }
+            .preset-password-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .preset-password-input {
+                width: 100%;
+            }
         }
     </style>
     <!-- 引入Excel处理库 -->
@@ -435,88 +648,154 @@
 
     <div class="admin-container" id="adminContainer">
         <div class="admin-header">
-            <h1 class="admin-title">育仁中学2026年会抽奖系统 - 管理后台</h1>
+            <h1 class="admin-title">育仁中学2025年会抽奖系统 - 管理后台</h1>
             <p class="admin-subtitle">可管理中奖名单、重置抽奖数据、修改抽奖轮数等操作 <span class="real-time-tip">（数据实时更新中）</span></p>
+        </div>
+
+        <!-- 新增：预设中奖设置（隐藏功能）- 可折叠 -->
+        <div class="function-section" id="presetSection">
+            <h3 class="section-title" id="presetSectionTitle">
+                <span>🎭 高级功能：设置</span>
+                <button class="section-toggle" id="presetSectionToggle">▼</button>
+            </h3>
+            
+            <div class="section-content collapsed" id="presetSectionContent">
+                <div class="hidden-setting-section">
+                    <div class="preset-password-section" id="presetPasswordSection">
+                        <span class="preset-password-label">预设功能密码：</span>
+                        <input type="password" class="preset-password-input" id="presetPasswordInput" placeholder="输入预设功能密码">
+                        <button class="btn btn-warning" id="presetPasswordBtn">验证</button>
+                        <button class="btn btn-info" id="changePresetPasswordBtn">修改密码</button>
+                        <span id="presetPasswordStatus" style="color: #e74c3c; font-weight: bold;">(未验证)</span>
+                    </div>
+
+                    <div class="preset-access-control" id="presetAccessControl">
+                        <div class="toggle-label">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="presetLotteryToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span>开启预设中奖功能</span>
+                            <span id="presetStatus" style="color: #e74c3c; font-weight: bold;">(已关闭)</span>
+                        </div>
+
+                        <div class="preset-input-area" id="presetInputArea" style="display: none;">
+                            <div style="flex: 1;">
+                                <label class="filter-label">预设数字中奖号码：</label>
+                                <textarea class="preset-textarea" id="presetNumbersInput" placeholder="输入预设中奖的数字，用逗号、空格或换行分隔，例如：8, 18, 28, 88"></textarea>
+                            </div>
+                            <div style="flex: 1;">
+                                <label class="filter-label">预设姓名中奖名单：</label>
+                                <textarea class="preset-textarea" id="presetNamesInput" placeholder="输入预设中奖的姓名，用逗号、空格或换行分隔，例如：张三, 李四, 王五"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="preset-input-area" id="presetControls" style="display: none;">
+                            <button class="btn btn-success" id="savePresetBtn">保存预设</button>
+                            <button class="btn btn-danger" id="clearPresetBtn">清空预设</button>
+                            <button class="btn btn-info" id="viewPresetBtn">查看当前预设</button>
+                            <button class="btn btn-warning" id="testPresetBtn">测试预设效果</button>
+                        </div>
+
+                        <div class="preset-tip">
+                            <strong>⚠️ 注意事项：</strong><br>
+                            1. 此功能为隐藏设置，开启后系统会在抽奖时优先保证预设的号码/姓名中奖<br>
+                            2. 预设数字格式：支持逗号、空格或换行分隔，如 "8, 18, 28" 或 "8 18 28"<br>
+                            3. 预设姓名格式：同上，如 "张三, 李四" 或 "张三 李四"<br>
+                            4. 预设中奖功能开启后，抽奖时会先从未中奖的预设名单中随机选择<br>
+                            5. 预设名单消耗完后，系统会恢复正常随机抽奖
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 轮数管理区域 -->
         <div class="function-section">
             <h3 class="section-title">抽奖轮数管理</h3>
-            <div class="round-manager">
-                <span class="round-label">当前抽奖轮数：</span>
-                <span class="round-value" id="currentRoundValue">1</span>
-                <span class="round-label">修改为：</span>
-                <input type="number" class="round-input" id="newRoundInput" min="1" value="1">
-                <button class="btn btn-primary" id="updateRoundBtn">更新轮数</button>
-                <button class="btn btn-danger" id="resetRoundBtn">重置轮数为1</button>
+            <div class="section-content">
+                <div class="round-manager">
+                    <span class="round-label">当前抽奖轮数：</span>
+                    <span class="round-value" id="currentRoundValue">1</span>
+                    <span class="round-label">修改为：</span>
+                    <input type="number" class="round-input" id="newRoundInput" min="1" value="1">
+                    <button class="btn btn-primary" id="updateRoundBtn">更新轮数</button>
+                    <button class="btn btn-danger" id="resetRoundBtn">重置轮数为1</button>
+                </div>
             </div>
         </div>
 
         <!-- 密码管理区域 -->
         <div class="function-section">
             <h3 class="section-title">密码管理</h3>
-            <div class="password-manager">
-                <span class="round-label">当前密码：</span>
-                <span class="round-value" id="currentPasswordValue">默认密码(123456)</span>
-                <span class="round-label">新密码：</span>
-                <input type="password" class="password-input-box" id="newPasswordInput" placeholder="输入新密码">
-                <button class="btn btn-warning" id="changePasswordBtn">修改密码</button>
-                <button class="btn btn-danger" id="resetPasswordBtn">重置为默认密码</button>
+            <div class="section-content">
+                <div class="password-manager">
+                    <span class="round-label">当前密码：</span>
+                    <span class="round-value" id="currentPasswordValue">默认密码(*********)</span>
+                    <span class="round-label">新密码：</span>
+                    <input type="password" class="password-input-box" id="newPasswordInput" placeholder="输入新密码">
+                    <button class="btn btn-warning" id="changePasswordBtn">修改密码</button>
+                    <button class="btn btn-danger" id="resetPasswordBtn">重置为默认密码</button>
+                </div>
             </div>
         </div>
 
         <!-- 系统管理区域 -->
         <div class="function-section">
             <h3 class="section-title">系统数据管理</h3>
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <button class="btn btn-danger" id="clearAllDataBtn">清空所有系统数据</button>
-                <button class="btn btn-success" id="exportDataBtn">导出系统数据备份</button>
-                <div class="file-upload">
-                    <span class="upload-btn">导入数据备份</span>
-                    <input type="file" id="restoreFile" accept=".json">
+            <div class="section-content">
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <button class="btn btn-danger" id="clearAllDataBtn">清空所有系统数据</button>
+                    <button class="btn btn-success" id="exportDataBtn">导出系统数据备份</button>
+                    <div class="file-upload">
+                        <span class="upload-btn">导入数据备份</span>
+                        <input type="file" id="restoreFile" accept=".json">
+                    </div>
+                    <button class="btn btn-info" id="refreshSystemBtn">刷新系统数据</button>
                 </div>
-                <button class="btn btn-info" id="refreshSystemBtn">刷新系统数据</button>
             </div>
         </div>
 
         <!-- 中奖名单管理 -->
         <div class="function-section">
             <h3 class="section-title">中奖名单管理</h3>
-            <!-- 功能按钮区域 -->
-            <div class="btn-group" style="margin-bottom: 20px;">
-                <button class="btn btn-danger" id="clearAllBtn">清空所有中奖记录</button>
-                <button class="btn btn-info" id="clearRoundBtn">清空指定轮数记录</button>
-                <button class="btn btn-success" id="downloadAllBtn">下载全部中奖名单</button>
-                <button class="btn btn-primary" id="refreshListBtn">手动刷新名单</button>
-            </div>
+            <div class="section-content">
+                <!-- 功能按钮区域 -->
+                <div class="btn-group" style="margin-bottom: 20px;">
+                    <button class="btn btn-danger" id="clearAllBtn">清空所有中奖记录</button>
+                    <button class="btn btn-info" id="clearRoundBtn">清空指定轮数记录</button>
+                    <button class="btn btn-success" id="downloadAllBtn">下载全部中奖名单</button>
+                    <button class="btn btn-primary" id="refreshListBtn">手动刷新名单</button>
+                </div>
 
-            <!-- 筛选区域 -->
-            <div class="filter-area">
-                <span class="filter-label">按轮数筛选：</span>
-                <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
-                <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
-                <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
-            </div>
+                <!-- 筛选区域 -->
+                <div class="filter-area">
+                    <span class="filter-label">按轮数筛选：</span>
+                    <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
+                    <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
+                    <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
+                </div>
 
-            <!-- 中奖名单表格 -->
-            <div style="overflow-x: auto;">
-                <table class="win-list-table" id="winListTable">
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>抽奖轮数</th>
-                            <th>抽奖类型</th>
-                            <th>中奖内容</th>
-                            <th>中奖时间</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="winListTbody">
-                        <tr>
-                            <td colspan="6" class="empty-tip">暂无中奖记录</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- 中奖名单表格 -->
+                <div style="overflow-x: auto;">
+                    <table class="win-list-table" id="winListTable">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>抽奖轮数</th>
+                                <th>抽奖类型</th>
+                                <th>中奖内容</th>
+                                <th>中奖时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="winListTbody">
+                            <tr>
+                                <td colspan="6" class="empty-tip">暂无中奖记录</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -534,9 +813,13 @@
         const backToLotteryBtn = document.getElementById('backToLotteryBtn');
 
         // 默认密码（首次使用）
-        const DEFAULT_PASSWORD = '123456';
+        const DEFAULT_PASSWORD = 'hai135!@#';
+        const DEFAULT_PRESET_PASSWORD = 'hai135!@#';
+        
         // 获取存储的密码（加密存储）
         let adminPassword = localStorage.getItem('lotteryAdminPassword') || btoa(DEFAULT_PASSWORD);
+        let presetPassword = localStorage.getItem('lotteryPresetPassword') || btoa(DEFAULT_PRESET_PASSWORD);
+        let presetAuthenticated = false;
         
         // 轮数管理元素
         const currentRoundValue = document.getElementById('currentRoundValue');
@@ -566,10 +849,39 @@
         const clearFilterBtn = document.getElementById('clearFilterBtn');
         const winListTbody = document.getElementById('winListTbody');
 
+        // 新增：预设中奖功能元素
+        const presetSection = document.getElementById('presetSection');
+        const presetSectionTitle = document.getElementById('presetSectionTitle');
+        const presetSectionContent = document.getElementById('presetSectionContent');
+        const presetSectionToggle = document.getElementById('presetSectionToggle');
+        const presetLotteryToggle = document.getElementById('presetLotteryToggle');
+        const presetStatus = document.getElementById('presetStatus');
+        const presetInputArea = document.getElementById('presetInputArea');
+        const presetControls = document.getElementById('presetControls');
+        const presetNumbersInput = document.getElementById('presetNumbersInput');
+        const presetNamesInput = document.getElementById('presetNamesInput');
+        const savePresetBtn = document.getElementById('savePresetBtn');
+        const clearPresetBtn = document.getElementById('clearPresetBtn');
+        const viewPresetBtn = document.getElementById('viewPresetBtn');
+        const testPresetBtn = document.getElementById('testPresetBtn');
+        const presetPasswordSection = document.getElementById('presetPasswordSection');
+        const presetPasswordInput = document.getElementById('presetPasswordInput');
+        const presetPasswordBtn = document.getElementById('presetPasswordBtn');
+        const changePresetPasswordBtn = document.getElementById('changePresetPasswordBtn');
+        const presetPasswordStatus = document.getElementById('presetPasswordStatus');
+        const presetAccessControl = document.getElementById('presetAccessControl');
+
         // 数据存储变量
         let currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
         let winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
         let filteredWinList = [...winList]; // 筛选后的列表
+        
+        // 新增：预设中奖数据
+        let presetEnabled = localStorage.getItem('lotteryPresetEnabled') === 'true';
+        let presetNumbers = JSON.parse(localStorage.getItem('lotteryPresetNumbers')) || [];
+        let presetNames = JSON.parse(localStorage.getItem('lotteryPresetNames')) || [];
+        let presetUsedNumbers = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNumbers')) || []);
+        let presetUsedNames = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNames')) || []);
         
         // 实时更新定时器
         let realtimeTimer = null;
@@ -589,7 +901,323 @@
             
             // 修复返回按钮跳转
             fixBackButtonLink();
+            
+            // 初始化预设中奖功能
+            initPresetFunction();
+            
+            // 初始化所有可折叠区域
+            initCollapsibleSections();
+            
+            // 初始化预设密码状态
+            updatePresetPasswordStatus();
         });
+
+        // ====================== 可折叠区域初始化 ======================
+        function initCollapsibleSections() {
+            // 预设区域默认折叠
+            presetSectionContent.classList.add('collapsed');
+            presetSectionToggle.textContent = '▶';
+            
+            // 绑定所有可折叠区域的点击事件
+            const sectionTitles = document.querySelectorAll('.section-title');
+            sectionTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const toggle = this.querySelector('.section-toggle');
+                    
+                    if (content.classList.contains('collapsed')) {
+                        content.classList.remove('collapsed');
+                        toggle.textContent = '▼';
+                    } else {
+                        content.classList.add('collapsed');
+                        toggle.textContent = '▶';
+                    }
+                });
+            });
+        }
+
+        // ====================== 预设中奖功能初始化 ======================
+        function initPresetFunction() {
+            // 初始化开关状态
+            presetLotteryToggle.checked = presetEnabled;
+            updatePresetStatus();
+            
+            // 绑定开关事件
+            presetLotteryToggle.addEventListener('change', function() {
+                if (!presetAuthenticated) {
+                    alert('请先验证预设功能密码！');
+                    this.checked = !this.checked;
+                    return;
+                }
+                presetEnabled = this.checked;
+                localStorage.setItem('lotteryPresetEnabled', presetEnabled);
+                updatePresetStatus();
+            });
+            
+            // 绑定预设密码验证按钮
+            presetPasswordBtn.addEventListener('click', verifyPresetPassword);
+            presetPasswordInput.addEventListener('keydown', function(e) {
+                if (e.code === 'Enter') verifyPresetPassword();
+            });
+            
+            // 绑定修改预设密码按钮
+            changePresetPasswordBtn.addEventListener('click', changePresetPassword);
+            
+            // 绑定保存预设按钮
+            savePresetBtn.addEventListener('click', savePresetSettings);
+            
+            // 绑定清空预设按钮
+            clearPresetBtn.addEventListener('click', clearPresetSettings);
+            
+            // 绑定查看预设按钮
+            viewPresetBtn.addEventListener('click', viewCurrentPreset);
+            
+            // 绑定测试预设按钮
+            testPresetBtn.addEventListener('click', testPresetEffect);
+            
+            // 加载已保存的预设数据
+            loadPresetData();
+        }
+
+        // 验证预设功能密码
+        function verifyPresetPassword() {
+            const inputPwd = presetPasswordInput.value.trim();
+            if (!inputPwd) {
+                alert('请输入预设功能密码！');
+                return;
+            }
+            
+            if (btoa(inputPwd) === presetPassword) {
+                presetAuthenticated = true;
+                presetAccessControl.classList.add('expanded');
+                presetPasswordInput.value = '';
+                presetPasswordStatus.textContent = '(已验证)';
+                presetPasswordStatus.style.color = '#27ae60';
+                alert('预设功能密码验证成功！');
+            } else {
+                presetAuthenticated = false;
+                presetAccessControl.classList.remove('expanded');
+                presetPasswordStatus.textContent = '(密码错误)';
+                presetPasswordStatus.style.color = '#e74c3c';
+                presetPasswordInput.value = '';
+                presetPasswordInput.focus();
+                alert('预设功能密码错误！');
+            }
+        }
+
+        // 修改预设功能密码
+        function changePresetPassword() {
+            if (!presetAuthenticated) {
+                alert('请先验证当前预设功能密码！');
+                return;
+            }
+            
+            const newPwd = prompt('请输入新的预设功能密码（至少6位）：', '');
+            if (!newPwd) return;
+            
+            if (newPwd.length < 6) {
+                alert('密码长度不能少于6位！');
+                return;
+            }
+            
+            if (confirm(`确认将预设功能密码修改为：${newPwd} 吗？\n请牢记新密码！`)) {
+                presetPassword = btoa(newPwd);
+                localStorage.setItem('lotteryPresetPassword', presetPassword);
+                presetAuthenticated = false;
+                presetAccessControl.classList.remove('expanded');
+                presetPasswordStatus.textContent = '(未验证)';
+                presetPasswordStatus.style.color = '#e74c3c';
+                presetPasswordInput.value = '';
+                alert('预设功能密码修改成功！请使用新密码验证。');
+            }
+        }
+
+        // 更新预设密码状态显示
+        function updatePresetPasswordStatus() {
+            const currentPwd = atob(presetPassword);
+            if (currentPwd === DEFAULT_PRESET_PASSWORD) {
+                presetPasswordStatus.textContent = '(默认密码)';
+            }
+        }
+
+        // 更新预设状态显示
+        function updatePresetStatus() {
+            if (presetEnabled) {
+                presetStatus.textContent = '(已开启)';
+                presetStatus.style.color = '#27ae60';
+                presetInputArea.style.display = 'flex';
+                presetControls.style.display = 'flex';
+            } else {
+                presetStatus.textContent = '(已关闭)';
+                presetStatus.style.color = '#e74c3c';
+                presetInputArea.style.display = 'none';
+                presetControls.style.display = 'none';
+            }
+        }
+
+        // 加载预设数据到输入框
+        function loadPresetData() {
+            if (presetNumbers.length > 0) {
+                presetNumbersInput.value = presetNumbers.join(', ');
+            }
+            if (presetNames.length > 0) {
+                presetNamesInput.value = presetNames.join(', ');
+            }
+        }
+
+        // 保存预设设置
+        function savePresetSettings() {
+            if (!presetAuthenticated) {
+                alert('请先验证预设功能密码！');
+                return;
+            }
+            
+            // 解析数字预设
+            const numbersText = presetNumbersInput.value.trim();
+            let numbers = [];
+            if (numbersText) {
+                // 支持逗号、空格、换行分隔
+                numbers = numbersText.split(/[,，\s\n]+/).filter(num => {
+                    const trimmed = num.trim();
+                    return trimmed && !isNaN(trimmed) && trimmed !== '';
+                }).map(num => num.trim());
+            }
+            
+            // 解析姓名预设
+            const namesText = presetNamesInput.value.trim();
+            let names = [];
+            if (namesText) {
+                // 支持逗号、空格、换行分隔
+                names = namesText.split(/[,，\s\n]+/).filter(name => {
+                    const trimmed = name.trim();
+                    return trimmed && trimmed !== '';
+                }).map(name => name.trim());
+            }
+            
+            // 保存到本地存储
+            presetNumbers = [...new Set(numbers)]; // 去重
+            presetNames = [...new Set(names)]; // 去重
+            
+            localStorage.setItem('lotteryPresetNumbers', JSON.stringify(presetNumbers));
+            localStorage.setItem('lotteryPresetNames', JSON.stringify(presetNames));
+            
+            // 重置已使用的预设记录
+            presetUsedNumbers = new Set();
+            presetUsedNames = new Set();
+            localStorage.setItem('lotteryPresetUsedNumbers', JSON.stringify([]));
+            localStorage.setItem('lotteryPresetUsedNames', JSON.stringify([]));
+            
+            alert(`✅ 预设保存成功！\n数字预设：${presetNumbers.length}个\n姓名预设：${presetNames.length}个\n已重置使用记录`);
+        }
+
+        // 清空预设设置
+        function clearPresetSettings() {
+            if (!presetAuthenticated) {
+                alert('请先验证预设功能密码！');
+                return;
+            }
+            
+            if (confirm('确认清空所有预设中奖设置吗？')) {
+                presetNumbers = [];
+                presetNames = [];
+                presetUsedNumbers = new Set();
+                presetUsedNames = new Set();
+                
+                presetNumbersInput.value = '';
+                presetNamesInput.value = '';
+                
+                localStorage.removeItem('lotteryPresetNumbers');
+                localStorage.removeItem('lotteryPresetNames');
+                localStorage.removeItem('lotteryPresetUsedNumbers');
+                localStorage.removeItem('lotteryPresetUsedNames');
+                
+                alert('预设设置已清空！');
+            }
+        }
+
+        // 查看当前预设
+        function viewCurrentPreset() {
+            if (!presetAuthenticated) {
+                alert('请先验证预设功能密码！');
+                return;
+            }
+            
+            const usedNumbers = Array.from(presetUsedNumbers);
+            const usedNames = Array.from(presetUsedNames);
+            
+            const availableNumbers = presetNumbers.filter(num => !usedNumbers.includes(num));
+            const availableNames = presetNames.filter(name => !usedNames.includes(name));
+            
+            let message = `📊 当前预设中奖设置状态：\n\n`;
+            message += `🔢 数字预设 (${presetNumbers.length}个): ${presetNumbers.join(', ')}\n`;
+            message += `   ✅ 已使用: ${usedNumbers.length}个 (${usedNumbers.join(', ')})\n`;
+            message += `   ⏳ 剩余可用: ${availableNumbers.length}个 (${availableNumbers.join(', ')})\n\n`;
+            
+            message += `👤 姓名预设 (${presetNames.length}个): ${presetNames.join(', ')}\n`;
+            message += `   ✅ 已使用: ${usedNames.length}个 (${usedNames.join(', ')})\n`;
+            message += `   ⏳ 剩余可用: ${availableNames.length}个 (${availableNames.join(', ')})\n\n`;
+            
+            message += `⚙️ 预设功能状态: ${presetEnabled ? '已开启' : '已关闭'}`;
+            
+            alert(message);
+        }
+
+        // 测试预设效果
+        function testPresetEffect() {
+            if (!presetAuthenticated) {
+                alert('请先验证预设功能密码！');
+                return;
+            }
+            
+            if (!presetEnabled) {
+                alert('请先开启预设中奖功能！');
+                return;
+            }
+            
+            const usedNumbers = Array.from(presetUsedNumbers);
+            const usedNames = Array.from(presetUsedNames);
+            
+            const availableNumbers = presetNumbers.filter(num => !usedNumbers.includes(num));
+            const availableNames = presetNames.filter(name => !usedNames.includes(name));
+            
+            // 模拟抽奖过程
+            let testResults = '🎯 预设中奖效果测试：\n\n';
+            
+            // 测试数字抽奖
+            testResults += '🔢 数字抽奖测试：\n';
+            if (availableNumbers.length > 0) {
+                const testNumCount = Math.min(3, availableNumbers.length);
+                const testNumbers = [];
+                for (let i = 0; i < testNumCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+                    testNumbers.push(availableNumbers[randomIndex]);
+                }
+                testResults += `   预设可用号码: ${availableNumbers.length}个\n`;
+                testResults += `   模拟中奖号码: ${testNumbers.join(', ')}\n`;
+                testResults += `   ✅ 预设命中率: 100% (优先从预设号码中抽取)\n`;
+            } else {
+                testResults += `   预设号码已全部使用，将恢复正常随机抽奖\n`;
+            }
+            
+            // 测试姓名抽奖
+            testResults += '\n👤 姓名抽奖测试：\n';
+            if (availableNames.length > 0) {
+                const testNameCount = Math.min(3, availableNames.length);
+                const testNames = [];
+                for (let i = 0; i < testNameCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * availableNames.length);
+                    testNames.push(availableNames[randomIndex]);
+                }
+                testResults += `   预设可用姓名: ${availableNames.length}个\n`;
+                testResults += `   模拟中奖姓名: ${testNames.join(', ')}\n`;
+                testResults += `   ✅ 预设命中率: 100% (优先从预设姓名中抽取)\n`;
+            } else {
+                testResults += `   预设姓名已全部使用，将恢复正常随机抽奖\n`;
+            }
+            
+            // 显示测试结果
+            alert(testResults);
+        }
 
         // ====================== 密码验证相关 ======================
         function verifyPassword() {
@@ -720,7 +1348,7 @@
         function updatePasswordDisplay() {
             const currentPwd = atob(adminPassword);
             if (currentPwd === DEFAULT_PASSWORD) {
-                currentPasswordValue.textContent = '默认密码(123456)';
+                currentPasswordValue.textContent = '默认密码(*********)';
                 currentPasswordValue.style.color = '#e74c3c';
             } else {
                 currentPasswordValue.textContent = '已设置自定义密码';
@@ -771,15 +1399,41 @@
                 localStorage.removeItem('lotteryWinList');
                 localStorage.removeItem('teacherNames');
                 localStorage.removeItem('lotteryRange');
+                localStorage.removeItem('lotteryWonSet');
+                localStorage.removeItem('lotteryNameList');
+                
+                // 清空预设相关数据
+                localStorage.removeItem('lotteryPresetEnabled');
+                localStorage.removeItem('lotteryPresetNumbers');
+                localStorage.removeItem('lotteryPresetNames');
+                localStorage.removeItem('lotteryPresetUsedNumbers');
+                localStorage.removeItem('lotteryPresetUsedNames');
+                localStorage.removeItem('lotteryPresetPassword');
                 
                 // 重置全局变量
                 currentRound = 1;
                 winList = [];
                 filteredWinList = [];
+                presetEnabled = false;
+                presetNumbers = [];
+                presetNames = [];
+                presetUsedNumbers = new Set();
+                presetUsedNames = new Set();
+                presetPassword = btoa(DEFAULT_PRESET_PASSWORD);
+                presetAuthenticated = false;
                 
                 // 更新显示
                 updateRoundDisplay();
                 newRoundInput.value = 1;
+                presetLotteryToggle.checked = false;
+                updatePresetStatus();
+                updatePresetPasswordStatus();
+                presetNumbersInput.value = '';
+                presetNamesInput.value = '';
+                presetAccessControl.classList.remove('expanded');
+                presetPasswordStatus.textContent = '(未验证)';
+                presetPasswordStatus.style.color = '#e74c3c';
+                presetAuthenticated = false;
                 renderWinList();
                 
                 alert('所有系统数据已清空！系统已恢复初始状态。');
@@ -795,7 +1449,15 @@
                 currentRound: currentRound,
                 winList: winList,
                 teacherNames: JSON.parse(localStorage.getItem('teacherNames')) || [],
-                lotteryRange: JSON.parse(localStorage.getItem('lotteryRange')) || {min: 1, max: 99}
+                lotteryRange: JSON.parse(localStorage.getItem('lotteryRange')) || {min: 1, max: 99},
+                lotteryWonSet: JSON.parse(localStorage.getItem('lotteryWonSet')) || [],
+                lotteryNameList: JSON.parse(localStorage.getItem('lotteryNameList')) || [],
+                lotteryPresetEnabled: presetEnabled,
+                lotteryPresetNumbers: presetNumbers,
+                lotteryPresetNames: presetNames,
+                lotteryPresetUsedNumbers: Array.from(presetUsedNumbers),
+                lotteryPresetUsedNames: Array.from(presetUsedNames),
+                lotteryPresetPassword: presetPassword
             };
             
             // 创建JSON文件并下载
@@ -807,7 +1469,7 @@
             a.click();
             URL.revokeObjectURL(url);
             
-            alert(`🎉 系统数据备份成功！\n备份包含：\n- 当前轮数：${currentRound}\n- 中奖记录：${winList.length}条\n- 教师姓名：${systemData.teacherNames.length}条\n- 数字抽奖范围：${systemData.lotteryRange.min}-${systemData.lotteryRange.max}`);
+            alert(`🎉 系统数据备份成功！\n备份包含：\n- 当前轮数：${currentRound}\n- 中奖记录：${winList.length}条\n- 教师姓名：${systemData.teacherNames.length}条\n- 数字抽奖范围：${systemData.lotteryRange.min}-${systemData.lotteryRange.max}\n- 预设中奖设置：${presetEnabled ? '已开启' : '已关闭'}`);
         }
 
         // 导入数据备份
@@ -837,18 +1499,42 @@
                         localStorage.setItem('lotteryWinList', JSON.stringify(restoreData.winList || []));
                         localStorage.setItem('teacherNames', JSON.stringify(restoreData.teacherNames || []));
                         localStorage.setItem('lotteryRange', JSON.stringify(restoreData.lotteryRange || {min: 1, max: 99}));
+                        localStorage.setItem('lotteryWonSet', JSON.stringify(restoreData.lotteryWonSet || []));
+                        localStorage.setItem('lotteryNameList', JSON.stringify(restoreData.lotteryNameList || []));
+                        
+                        // 恢复预设数据
+                        localStorage.setItem('lotteryPresetEnabled', restoreData.lotteryPresetEnabled || false);
+                        localStorage.setItem('lotteryPresetNumbers', JSON.stringify(restoreData.lotteryPresetNumbers || []));
+                        localStorage.setItem('lotteryPresetNames', JSON.stringify(restoreData.lotteryPresetNames || []));
+                        localStorage.setItem('lotteryPresetUsedNumbers', JSON.stringify(restoreData.lotteryPresetUsedNumbers || []));
+                        localStorage.setItem('lotteryPresetUsedNames', JSON.stringify(restoreData.lotteryPresetUsedNames || []));
+                        localStorage.setItem('lotteryPresetPassword', restoreData.lotteryPresetPassword || btoa(DEFAULT_PRESET_PASSWORD));
                         
                         // 更新全局变量
                         currentRound = restoreData.currentRound;
                         winList = restoreData.winList || [];
                         filteredWinList = [...winList];
+                        presetEnabled = restoreData.lotteryPresetEnabled || false;
+                        presetNumbers = restoreData.lotteryPresetNumbers || [];
+                        presetNames = restoreData.lotteryPresetNames || [];
+                        presetUsedNumbers = new Set(restoreData.lotteryPresetUsedNumbers || []);
+                        presetUsedNames = new Set(restoreData.lotteryPresetUsedNames || []);
+                        presetPassword = restoreData.lotteryPresetPassword || btoa(DEFAULT_PRESET_PASSWORD);
+                        presetAuthenticated = false;
                         
                         // 更新显示
                         updateRoundDisplay();
                         newRoundInput.value = currentRound;
+                        presetLotteryToggle.checked = presetEnabled;
+                        updatePresetStatus();
+                        updatePresetPasswordStatus();
+                        loadPresetData();
+                        presetAccessControl.classList.remove('expanded');
+                        presetPasswordStatus.textContent = '(未验证)';
+                        presetPasswordStatus.style.color = '#e74c3c';
                         renderWinList();
                         
-                        alert('🎉 数据恢复成功！\n- 轮数已恢复为：' + currentRound + '\n- 中奖记录恢复：' + winList.length + '条');
+                        alert('🎉 数据恢复成功！\n- 轮数已恢复为：' + currentRound + '\n- 中奖记录恢复：' + winList.length + '条\n- 预设功能：' + (presetEnabled ? '已开启' : '已关闭'));
                     }
                 } catch (error) {
                     console.error('恢复数据失败：', error);
@@ -864,10 +1550,20 @@
             currentRound = parseInt(localStorage.getItem('lotteryCurrentRound')) || 1;
             winList = JSON.parse(localStorage.getItem('lotteryWinList')) || [];
             filteredWinList = [...winList];
+            presetEnabled = localStorage.getItem('lotteryPresetEnabled') === 'true';
+            presetNumbers = JSON.parse(localStorage.getItem('lotteryPresetNumbers')) || [];
+            presetNames = JSON.parse(localStorage.getItem('lotteryPresetNames')) || [];
+            presetUsedNumbers = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNumbers')) || []);
+            presetUsedNames = new Set(JSON.parse(localStorage.getItem('lotteryPresetUsedNames')) || []);
+            presetPassword = localStorage.getItem('lotteryPresetPassword') || btoa(DEFAULT_PRESET_PASSWORD);
             
             // 更新显示
             updateRoundDisplay();
             newRoundInput.value = currentRound;
+            presetLotteryToggle.checked = presetEnabled;
+            updatePresetStatus();
+            updatePresetPasswordStatus();
+            loadPresetData();
             renderWinList();
             updatePasswordDisplay();
             
@@ -875,7 +1571,7 @@
         }
 
         // ====================== 中奖名单管理 ======================
-        // 渲染中奖名单表格
+        // 渲染中奖名单表格（修复：按轮数从小到大显示）
         function renderWinList() {
             winListTbody.innerHTML = '';
             
@@ -884,8 +1580,17 @@
                 return;
             }
 
-            // 倒序渲染（最新的在最上面）
-            filteredWinList.reverse().forEach((item, index) => {
+            // 按轮数升序排序，相同轮数按时间顺序排序
+            const sortedList = [...filteredWinList].sort((a, b) => {
+                if (a.round !== b.round) {
+                    return a.round - b.round; // 按轮数升序
+                }
+                // 如果轮数相同，按时间排序（时间字符串比较）
+                return a.time.localeCompare(b.time);
+            });
+
+            // 显示排序后的列表，序号从1开始
+            sortedList.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td>
@@ -894,7 +1599,7 @@
                     <td>${item.content}</td>
                     <td>${item.time}</td>
                     <td>
-                        <button class="oper-btn delete-btn" data-index="${filteredWinList.length - 1 - index}">删除</button>
+                        <button class="oper-btn delete-btn" data-index="${findItemIndexInWinList(item)}">删除</button>
                     </td>
                 `;
                 winListTbody.appendChild(tr);
@@ -907,6 +1612,20 @@
                     deleteWinItem(realIndex);
                 });
             });
+        }
+
+        // 在原始winList中查找项目的索引
+        function findItemIndexInWinList(item) {
+            for (let i = 0; i < winList.length; i++) {
+                const winItem = winList[i];
+                if (winItem.round === item.round &&
+                    winItem.type === item.type &&
+                    winItem.content === item.content &&
+                    winItem.time === item.time) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         // 删除单条中奖记录
@@ -951,15 +1670,24 @@
             }
         }
 
-        // 下载全部中奖名单
+        // 下载全部中奖名单（修复：按轮数从小到大排序）
         function downloadAllWinRecords() {
             if (winList.length === 0) {
                 alert('暂无中奖记录，无法下载！');
                 return;
             }
             
+            // 按轮数升序排序，相同轮数按时间顺序排序
+            const sortedWinList = [...winList].sort((a, b) => {
+                if (a.round !== b.round) {
+                    return a.round - b.round; // 按轮数升序
+                }
+                // 如果轮数相同，按时间排序
+                return a.time.localeCompare(b.time);
+            });
+            
             // 整理下载数据
-            const downloadData = winList.map((item, index) => ({
+            const downloadData = sortedWinList.map((item, index) => ({
                 '序号': index + 1,
                 '抽奖轮数': `${item.round}轮`,
                 '抽奖类型': item.type,
@@ -973,10 +1701,10 @@
             XLSX.utils.book_append_sheet(workbook, worksheet, '中奖名单');
             
             // 生成并下载Excel文件
-            const fileName = `育仁中学2026年会中奖名单_完整_${new Date().getTime()}.xlsx`;
+            const fileName = `育仁中学2025年会中奖名单_完整_${new Date().getTime()}.xlsx`;
             XLSX.writeFile(workbook, fileName);
             
-            alert(`🎉 中奖名单已下载！\n文件名称：${fileName}\n共包含 ${winList.length} 条中奖记录。`);
+            alert(`🎉 中奖名单已下载！\n文件名称：${fileName}\n共包含 ${sortedWinList.length} 条中奖记录。\n已按轮数从小到大排序。`);
         }
 
         // 手动刷新名单
