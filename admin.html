@@ -497,18 +497,19 @@
             border-collapse: separate; /* 使用separate让单元格间距生效 */
             border-spacing: 0; /* 单元格间距为0 */
             margin-bottom: 0;
-            table-layout: auto; /* 使用自动布局，更灵活 */
+            table-layout: fixed; /* 使用固定布局，更稳定 */
         }
 
         .win-list-table th,
         .win-list-table td {
-            padding: 12px 15px; /* 增加内边距，提升可读性 */
+            padding: 14px 15px; /* 增加内边距，提升可读性 */
             text-align: center;
             border-bottom: 1px solid #e0e0e0; /* 只保留底部边框 */
             vertical-align: middle;
             word-wrap: break-word;
             overflow-wrap: break-word;
             line-height: 1.5; /* 增加行高，提升可读性 */
+            height: 60px; /* 固定行高，确保间距一致 */
         }
 
         /* 移除最后一行的底部边框 */
@@ -523,14 +524,13 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            padding: 14px 15px; /* 表头内边距稍大 */
+            padding: 16px 15px; /* 表头内边距稍大 */
             border-bottom: 2px solid #152066;
             font-size: 15px;
         }
 
         .win-list-table tr {
-            height: auto; /* 自动高度，根据内容调整 */
-            min-height: 55px; /* 最小行高 */
+            height: 60px; /* 固定行高 */
             transition: background-color 0.2s ease;
         }
 
@@ -570,21 +570,22 @@
         /* 内容列 - 优化间距和显示 */
         .content-cell {
             min-width: 180px;
-            max-width: 350px; /* 增加最大宽度 */
+            max-width: 400px; /* 增加最大宽度 */
             text-align: left;
-            padding: 12px 20px !important; /* 增加左右间距 */
+            padding: 14px 20px !important; /* 增加左右间距 */
             color: #333;
             font-size: 16px;
             font-weight: 500;
             word-break: break-all; /* 允许在任意字符处换行 */
             hyphens: auto; /* 自动断字 */
             letter-spacing: 0.5px; /* 增加字母间距 */
+            line-height: 1.6; /* 优化行高 */
         }
 
         /* 长内容特殊处理 */
         .content-cell.long-content {
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         /* 时间列 */
@@ -633,7 +634,7 @@
             font-style: italic;
         }
 
-        /* 列表信息提示 */
+        /* 列表信息提示 - 优化：靠右对齐 */
         .list-info-tip {
             font-size: 14px;
             color: #666;
@@ -644,6 +645,32 @@
             display: inline-block;
             border-left: 4px solid #1a2980;
             font-weight: 500;
+            margin-left: auto; /* 靠右对齐 */
+            float: right; /* 浮动到右侧 */
+            clear: both; /* 清除浮动 */
+        }
+
+        /* 筛选区域容器优化 */
+        .filter-container {
+            display: flex;
+            justify-content: space-between; /* 左右分布 */
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .filter-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-right {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* 靠右对齐 */
         }
 
         /* 返回按钮 */
@@ -744,13 +771,30 @@
             }
             
             .content-cell {
-                max-width: 250px;
-                padding: 10px 15px !important;
+                max-width: 300px;
+                padding: 12px 15px !important;
                 font-size: 15px;
             }
             
             .time-cell {
                 width: 150px;
+            }
+            
+            .list-info-tip {
+                margin-top: 15px;
+                width: 100%;
+                text-align: right;
+            }
+            
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-right {
+                margin-left: 0;
+                justify-content: flex-end;
+                width: 100%;
             }
         }
 
@@ -771,6 +815,7 @@
             .win-list-table td {
                 padding: 10px 8px;
                 font-size: 13px;
+                height: 50px; /* 减小行高 */
             }
             
             .win-list-wrapper {
@@ -778,9 +823,10 @@
             }
             
             .content-cell {
-                max-width: 150px;
+                max-width: 200px;
                 padding: 8px 10px !important;
                 font-size: 14px;
+                line-height: 1.4;
             }
             
             .time-cell {
@@ -835,14 +881,27 @@
                 width: 100%;
             }
             
-            .filter-area {
+            .filter-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-left {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                width: 100%;
             }
             
             .filter-input {
                 width: 100%;
+            }
+            
+            .list-info-tip {
+                font-size: 13px;
+                padding: 6px 12px;
+                width: 100%;
+                text-align: center;
+                margin: 10px 0 0 0;
             }
         }
 
@@ -855,9 +914,16 @@
                 font-size: 12px;
             }
             
+            .win-list-table th,
+            .win-list-table td {
+                padding: 8px 5px;
+                height: 45px;
+            }
+            
             .content-cell {
-                max-width: 120px;
+                max-width: 150px;
                 font-size: 13px;
+                padding: 6px 8px !important;
             }
             
             .time-cell {
@@ -867,7 +933,11 @@
             
             .list-info-tip {
                 font-size: 12px;
-                padding: 6px 10px;
+                padding: 5px 10px;
+            }
+            
+            .filter-label {
+                font-size: 14px;
             }
         }
     </style>
@@ -1007,13 +1077,17 @@
                     <button class="btn btn-primary" id="refreshListBtn">手动刷新名单</button>
                 </div>
 
-                <!-- 筛选区域 -->
-                <div class="filter-area">
-                    <span class="filter-label">按轮数筛选：</span>
-                    <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
-                    <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
-                    <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
-                    <span class="list-info-tip" id="listInfoTip">共 0 条记录</span>
+                <!-- 筛选区域 - 优化布局 -->
+                <div class="filter-container">
+                    <div class="filter-left">
+                        <span class="filter-label">按轮数筛选：</span>
+                        <input type="number" class="filter-input" id="filterRoundInput" placeholder="输入轮数" min="1">
+                        <button class="btn btn-primary" id="filterRoundBtn">筛选</button>
+                        <button class="btn btn-primary" id="clearFilterBtn">清空筛选</button>
+                    </div>
+                    <div class="filter-right">
+                        <span class="list-info-tip" id="listInfoTip">共 0 条记录</span>
+                    </div>
                 </div>
 
                 <!-- 中奖名单表格容器 -->
@@ -1821,7 +1895,7 @@
         }
 
         // ====================== 中奖名单管理 ======================
-        // 更新列表信息提示
+        // 更新列表信息提示 - 优化：靠右显示
         function updateListInfoTip() {
             const totalCount = winList.length;
             const filteredCount = filteredWinList.length;
@@ -1909,19 +1983,34 @@
             }
         }
 
-        // 清空所有中奖记录
+        // 清空所有中奖记录 - 修改：重置预设已使用记录和已中奖集合
         function clearAllWinRecords() {
             if (confirm('⚠️ 警告：确认清空所有中奖记录吗？此操作不可逆！')) {
+                // 清空中奖名单本地存储
                 localStorage.removeItem('lotteryWinList');
                 winList = [];
+                
+                // 清空已中奖集合，以便重新抽奖
+                localStorage.removeItem('lotteryWonSet');
+                
+                // 关键修改：清空预设已使用记录，让预设可以重新使用
+                localStorage.removeItem('lotteryPresetUsedNumbers');
+                localStorage.removeItem('lotteryPresetUsedNames');
+                
+                // 重置全局变量
                 filteredWinList = [];
+                presetUsedNumbers = new Set();
+                presetUsedNames = new Set();
+                
+                // 更新显示
                 renderWinList();
                 updateListInfoTip();
-                alert('所有中奖记录已清空');
+                
+                alert('✅ 所有中奖记录已清空！\n');
             }
         }
 
-        // 清空指定轮数的记录
+        // 清空指定轮数的记录 - 修改：清理相关的已中奖记录
         function clearRoundWinRecords() {
             const round = prompt('请输入要清空的轮数：', '1');
             if (!round) return;
@@ -1932,13 +2021,44 @@
                 return;
             }
 
-            if (confirm(`确认清空第 ${roundNum} 轮的所有中奖记录吗？`)) {
+            if (confirm(`确认清空第 ${roundNum} 轮的所有中奖记录吗？\n注意：此操作会从已中奖集合中移除相关记录，让这些中奖者可以再次参与抽奖。`)) {
+                // 获取要被清除的记录
+                const recordsToRemove = winList.filter(item => item.round === roundNum);
+                
+                // 从总列表中移除
                 winList = winList.filter(item => item.round !== roundNum);
                 localStorage.setItem('lotteryWinList', JSON.stringify(winList));
+                
+                // 从已中奖集合中移除相关记录
+                let wonSet = new Set(JSON.parse(localStorage.getItem('lotteryWonSet')) || []);
+                recordsToRemove.forEach(record => {
+                    wonSet.delete(record.content);
+                    
+                    // 如果是预设中奖，从预设已使用记录中移除
+                    if (presetEnabled) {
+                        // 检查是否是预设数字
+                        if (presetNumbers.includes(record.content) || 
+                            presetNumbers.some(num => num.toString() === record.content)) {
+                            presetUsedNumbers.delete(record.content);
+                        }
+                        // 检查是否是预设姓名
+                        if (presetNames.includes(record.content)) {
+                            presetUsedNames.delete(record.content);
+                        }
+                    }
+                });
+                
+                // 保存更新后的集合
+                localStorage.setItem('lotteryWonSet', JSON.stringify(Array.from(wonSet)));
+                
+                // 保存更新后的预设使用记录
+                localStorage.setItem('lotteryPresetUsedNumbers', JSON.stringify(Array.from(presetUsedNumbers)));
+                localStorage.setItem('lotteryPresetUsedNames', JSON.stringify(Array.from(presetUsedNames)));
+                
                 filteredWinList = [...winList];
                 renderWinList();
                 updateListInfoTip();
-                alert(`第 ${roundNum} 轮的中奖记录已清空`);
+                alert(`✅ 第 ${roundNum} 轮的中奖记录已清空\n已从已中奖集合中移除相关记录，这些中奖者可以再次参与抽奖。`);
             }
         }
 
