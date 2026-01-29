@@ -561,26 +561,6 @@
             to { transform: translateY(-12px); }
         }
 
-        /* 管理入口 */
-        .admin-entrance {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: rgba(26, 41, 128, 0.8);
-            color: white;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-
-        .admin-entrance:hover {
-            background-color: #1a2980;
-        }
-
         /* 轮数显示样式（新增） */
         .round-display {
             font-size: 20px;
@@ -635,6 +615,38 @@
         
         .win-list-content::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
+        }
+
+        /* ====================== 修改：底部左侧管理入口样式 ====================== */
+        /* 底部左侧管理入口 - 隐蔽设计 */
+        .admin-entrance {
+            position: fixed;
+            bottom: 15px;
+            left: 20px;
+            padding: 8px 18px;
+            background-color: rgba(0, 0, 0, 0.4); /* 半透明深色背景 */
+            color: rgba(255, 255, 255, 0.7); /* 半透明白色文字 */
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0.7; /* 默认半透明 */
+            letter-spacing: 2px; /* 增加字母间距 */
+            font-weight: 400; /* 较轻的字体 */
+            text-transform: uppercase; /* 大写字母 */
+        }
+
+        .admin-entrance:hover {
+            background-color: rgba(26, 41, 128, 0.8); /* 悬停时显示主题色 */
+            color: white;
+            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 41, 128, 0.4);
         }
 
         /* 响应式适配 */
@@ -854,6 +866,19 @@
                 padding: 30px 20px;
                 font-size: 14px;
             }
+            
+            /* 响应式底部左侧管理入口 */
+            .admin-entrance {
+                bottom: 10px;
+                left: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+                opacity: 0.6; /* 更透明 */
+            }
+            
+            .admin-entrance:hover {
+                opacity: 1;
+            }
         }
 
         @media (max-width: 480px) {
@@ -901,15 +926,21 @@
                 padding: 3px 6px;
                 font-size: 11px;
             }
+            
+            /* 超小屏幕底部左侧管理入口 */
+            .admin-entrance {
+                bottom: 8px;
+                left: 8px;
+                padding: 5px 10px;
+                font-size: 11px;
+                opacity: 0.5; /* 更透明 */
+            }
         }
     </style>
     <!-- 引入处理Excel的第三方库 -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- 管理页面入口 -->
-    <a href="admin.html" class="admin-entrance">---</a>
-
     <!-- 主容器，包含抽奖区和名单区 -->
     <div class="main-wrap">
         <!-- 原有抽奖容器 -->
@@ -1004,6 +1035,9 @@
         </div>
     </div>
 
+    <!-- ====================== 修改：底部左侧管理入口 ====================== -->
+    <a href="admin.html" class="admin-entrance" id="adminEntrance"></a>
+
     <script>
         // ====================== 全局变量 ======================
         // 抽奖状态
@@ -1037,6 +1071,8 @@
         let presetCandidates = [];
         // Excel导入区域折叠状态
         let excelImportCollapsed = localStorage.getItem('excelImportCollapsed') === 'true';
+        // 管理入口元素
+        const adminEntrance = document.getElementById('adminEntrance');
 
         // ====================== 获取页面元素 ======================
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -1137,6 +1173,22 @@
                     loadPresetData();
                     updateRemainingTip();
                 }
+            });
+            
+            // 隐藏管理入口一段时间（用户不活动时自动隐藏）
+            setTimeout(() => {
+                adminEntrance.style.opacity = '0.3';
+            }, 5000);
+            
+            // 鼠标移入显示管理入口
+            document.addEventListener('mousemove', function() {
+                adminEntrance.style.opacity = '0.7';
+                
+                // 3秒后再次淡出
+                clearTimeout(window.adminEntranceTimer);
+                window.adminEntranceTimer = setTimeout(() => {
+                    adminEntrance.style.opacity = '0.3';
+                }, 3000);
             });
         });
 
